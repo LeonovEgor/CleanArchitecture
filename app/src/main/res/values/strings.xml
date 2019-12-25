@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">ClearArch</string>
+    <string name="rateRequestText">Would you like to rate the program?</string>
+</resources>
