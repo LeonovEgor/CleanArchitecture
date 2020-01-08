@@ -1,5 +1,13 @@
 package ru.leonov.cleararch.domain;
 
 public class Settings {
-    public int runCounter;
+    private int runCounter;
+
+    public int getRunCounter() {
+        return runCounter;
+    }
+
+    public void setRunCounter(int runCounter) {
+        this.runCounter = runCounter;
+    }
 }

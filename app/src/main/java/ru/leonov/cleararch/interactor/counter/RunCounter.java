@@ -5,7 +5,7 @@ import ru.leonov.cleararch.domain.Settings;
 import ru.leonov.cleararch.repository.IStorageRepository;
 
 public class RunCounter implements IRunCounter{
-    IStorageRepository repository;
+    private IStorageRepository repository;
 
     public RunCounter(StorageRepository repository) {
         this.repository = repository;
@@ -13,13 +13,13 @@ public class RunCounter implements IRunCounter{
 
     @Override
     public int getRunCount() {
-        return repository.getSettings().runCounter;
+        return repository.getSettings().getRunCounter();
     }
 
     @Override
-    public void IncrementRun() {
+    public void incrementRun() {
         Settings settings = repository.getSettings();
-        settings.runCounter++;
+        settings.setRunCounter(settings.getRunCounter() + 1);
 
         repository.setSettings(settings);
     }

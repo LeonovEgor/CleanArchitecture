@@ -3,10 +3,10 @@ package ru.leonov.cleararch.interactor.main;
 import ru.leonov.cleararch.interactor.counter.IRunCounter;
 
 public class RatingLogic implements IRatingLogic{
-    public static final int FIRST_SHOW = 2;
-    public static final int NEXT_SHOW = 4;
+    private static final int FIRST_SHOW = 2;
+    private static final int NEXT_SHOW = 4;
 
-    IRunCounter counter;
+    private IRunCounter counter;
 
     public RatingLogic(IRunCounter counter) {
         this.counter = counter;

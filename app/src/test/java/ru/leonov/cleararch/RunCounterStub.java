@@ -13,7 +13,7 @@ public class RunCounterStub implements IRunCounter {
     }
 
     @Override
-    public void IncrementRun() {
+    public void incrementRun() {
         runCount++;
     }
 }
