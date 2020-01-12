@@ -1,6 +1,5 @@
 package ru.leonov.cleararch.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.annotations.Nullable;

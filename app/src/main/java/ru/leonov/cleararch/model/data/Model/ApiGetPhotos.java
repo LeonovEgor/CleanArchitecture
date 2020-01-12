@@ -3,7 +3,7 @@ package ru.leonov.cleararch.model.data.Model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class ApiGetResentPhotos {
+public class ApiGetPhotos {
 
     @SerializedName("photos")
     @Expose
@@ -16,15 +16,7 @@ public class ApiGetResentPhotos {
         return photos;
     }
 
-    public void setPhotos(ApiPhotos photos) {
-        this.photos = photos;
-    }
-
     public String getStat() {
         return stat;
-    }
-
-    public void setStat(String stat) {
-        this.stat = stat;
     }
 }

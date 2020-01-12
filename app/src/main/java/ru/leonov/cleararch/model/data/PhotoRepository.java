@@ -1,6 +1,5 @@
 package ru.leonov.cleararch.model.data;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -15,7 +14,7 @@ public class PhotoRepository implements IPhotoRepository {
     }
 
     @Override
-    public Observable<List<PhotoContainer>> getPhotos() {
-        return photoDataSource.getPhotos();
+    public Observable<List<PhotoContainer>> getPhotos(String search) {
+        return photoDataSource.getPhotos(search);
     }
 }

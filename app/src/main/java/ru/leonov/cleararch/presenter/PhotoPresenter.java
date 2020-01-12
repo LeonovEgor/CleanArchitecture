@@ -20,13 +20,13 @@ public class PhotoPresenter  implements IPhotoPresenter{
 
         // подписываемся на действия пользователя
         viewPhotos.userActionIntent()
-                .flatMap(new Function<Boolean, ObservableSource<PhotoViewState>>() {
+                .flatMap(new Function<String, ObservableSource<PhotoViewState>>() {
                     @Override
-                    public ObservableSource<PhotoViewState> apply(Boolean aBoolean) throws Exception {
+                    public ObservableSource<PhotoViewState> apply(String search) throws Exception {
                         // получаем новое состояние с данными из интерактора
                         // указываем выполняться в потоке ввода-вывода
                         // получать результат -- в главном потоке
-                        return interactor.getPhotos()
+                        return interactor.getPhotos(search)
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread());
                     }

@@ -1,6 +1,5 @@
 package ru.leonov.cleararch.model.interactor.photos;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -13,22 +12,13 @@ public class PhotoInteractor implements IPhotoInteractor {
 
     private final IPhotoRepository photosRepository;
 
-    // интерактор использует репозиторий для получения данных
-    // репозиторий - абстракция над слоем доступа к данным
     public PhotoInteractor(IPhotoRepository photosRepository) {
         this.photosRepository = photosRepository;
     }
 
-    /**
-     * Метод для получения данных
-     * Возвращает ViewState c состоянием прогресс
-     * и затем данные либо ошибку
-     * Используется RxJava -- метод возвращает не просто одно значение,
-     * но потенциально не ограниченное количество состояний
-     */
     @Override
-    public Observable<PhotoViewState> getPhotos() {
-        return photosRepository.getPhotos()
+    public Observable<PhotoViewState> getPhotos(String search) {
+        return photosRepository.getPhotos(search)
                 // при получении данных возвращаем ViewState с данными
                 .map(new Function<List<PhotoContainer>, PhotoViewState>() {
                     @Override

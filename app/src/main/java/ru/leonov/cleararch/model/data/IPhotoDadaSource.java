@@ -6,5 +6,5 @@ import io.reactivex.Observable;
 import ru.leonov.cleararch.model.entities.PhotoContainer;
 
 public interface IPhotoDadaSource {
-    Observable<List<PhotoContainer>> getPhotos();
+    Observable<List<PhotoContainer>> getPhotos(String search);
 }

@@ -4,5 +4,5 @@ import io.reactivex.Observable;
 import ru.leonov.cleararch.model.PhotoViewState;
 
 public interface IPhotoInteractor {
-    Observable<PhotoViewState> getPhotos();
+    Observable<PhotoViewState> getPhotos(String search);
 }
