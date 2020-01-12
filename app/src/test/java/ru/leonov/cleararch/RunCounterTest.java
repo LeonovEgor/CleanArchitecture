@@ -2,8 +2,8 @@ package ru.leonov.cleararch;
 
 import org.junit.Test;
 
-import ru.leonov.cleararch.interactor.main.IRatingLogic;
-import ru.leonov.cleararch.interactor.main.RatingLogic;
+import ru.leonov.cleararch.model.interactor.main.IRatingLogic;
+import ru.leonov.cleararch.model.interactor.main.RatingLogic;
 
 import static org.junit.Assert.*;
 

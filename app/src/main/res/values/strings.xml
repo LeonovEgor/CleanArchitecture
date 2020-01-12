@@ -2,4 +2,12 @@
     <string name="app_name">ClearArch</string>
     <string name="rate_request_caption">Would you like to rate the app?</string>
     <string name="rate_request_show_button">Show</string>
+    <string name="information">Information</string>
+    <string name="hint_search">Cats, for example</string>
+    <string name="search">Search</string>
+    <string name="til_search_helper_text">Enter the required information</string>
+    <string name="no_photo">No photo</string>
+    <string name="loading">Loading...</string>
+    <string name="tv_name">tv_name</string>
+    <string name="tv_description">tv_description</string>
 </resources>

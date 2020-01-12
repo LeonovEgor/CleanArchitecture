@@ -2,12 +2,12 @@ package ru.leonov.cleararch;
 
 import android.app.Application;
 
-import ru.leonov.cleararch.data.Storage;
-import ru.leonov.cleararch.data.StorageRepository;
-import ru.leonov.cleararch.interactor.counter.IRunCounter;
-import ru.leonov.cleararch.interactor.counter.RunCounter;
-import ru.leonov.cleararch.interactor.main.IRatingLogic;
-import ru.leonov.cleararch.interactor.main.RatingLogic;
+import ru.leonov.cleararch.model.data.Storage;
+import ru.leonov.cleararch.model.data.StorageRepository;
+import ru.leonov.cleararch.model.interactor.counter.IRunCounter;
+import ru.leonov.cleararch.model.interactor.counter.RunCounter;
+import ru.leonov.cleararch.model.interactor.main.IRatingLogic;
+import ru.leonov.cleararch.model.interactor.main.RatingLogic;
 
 
 public class ClearArch extends Application {

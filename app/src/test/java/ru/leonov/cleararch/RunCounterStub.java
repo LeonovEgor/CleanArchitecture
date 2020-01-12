@@ -1,6 +1,6 @@
 package ru.leonov.cleararch;
 
-import ru.leonov.cleararch.interactor.counter.IRunCounter;
+import ru.leonov.cleararch.model.interactor.counter.IRunCounter;
 
 public class RunCounterStub implements IRunCounter {
     private int runCount = 0;
