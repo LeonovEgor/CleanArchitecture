@@ -18,14 +18,10 @@ public class PhotoPresenter  implements IPhotoPresenter{
         this.viewPhotos = viewPhotos;
         this.interactor = interactor;
 
-        // подписываемся на действия пользователя
         viewPhotos.userActionIntent()
                 .flatMap(new Function<String, ObservableSource<PhotoViewState>>() {
                     @Override
-                    public ObservableSource<PhotoViewState> apply(String search) throws Exception {
-                        // получаем новое состояние с данными из интерактора
-                        // указываем выполняться в потоке ввода-вывода
-                        // получать результат -- в главном потоке
+                    public ObservableSource<PhotoViewState> apply(String search) {
                         return interactor.getPhotos(search)
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread());
@@ -34,22 +30,19 @@ public class PhotoPresenter  implements IPhotoPresenter{
                 .subscribe(new PhotosObserver());
     }
 
-//    @Override
-//    public void onStart() {
-//        viewPhotos.onStartIntent()
-//                .flatMap(new Function<Boolean, ObservableSource<PhotoViewState>>() {
-//                    @Override
-//                    public ObservableSource<PhotoViewState> apply(Boolean aBoolean) throws Exception {
-//                        // получаем новое состояние с данными из интерактора
-//                        // указываем выполняться в потоке ввода-вывода
-//                        // получать результат -- в главном потоке
-//                        return interactor.getPhotos()
-//                                .subscribeOn(Schedulers.io())
-//                                .observeOn(AndroidSchedulers.mainThread());
-//                    }
-//                })
-//                .subscribe(new PhotosObserver());
-//    }
+    @Override
+    public void onStart() {
+        viewPhotos.onStartIntent()
+                .flatMap(new Function<String, ObservableSource<PhotoViewState>>() {
+                    @Override
+                    public ObservableSource<PhotoViewState> apply(String search) {
+                        return interactor.getPhotos(search)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread());
+                    }
+                })
+                .subscribe(new PhotosObserver());
+    }
 
     @Override
     public void onStop() {

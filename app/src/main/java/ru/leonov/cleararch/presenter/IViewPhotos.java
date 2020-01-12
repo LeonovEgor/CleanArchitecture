@@ -7,4 +7,5 @@ public interface IViewPhotos {
     void render(PhotoViewState viewState);
 
     Observable<String> userActionIntent();
+    Observable<String> onStartIntent();
 }

@@ -7,9 +7,9 @@ import ru.leonov.cleararch.model.entities.PhotoContainer;
 import ru.leonov.cleararch.model.repository.IPhotoRepository;
 
 public class PhotoRepository implements IPhotoRepository {
-    private PhotoDataSource photoDataSource;
+    private IPhotoDataSource photoDataSource;
 
-    public PhotoRepository(PhotoDataSource photoDataSource) {
+    public PhotoRepository(IPhotoDataSource photoDataSource) {
         this.photoDataSource = photoDataSource;
     }
 

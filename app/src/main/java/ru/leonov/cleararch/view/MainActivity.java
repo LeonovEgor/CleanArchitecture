@@ -15,6 +15,8 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.util.List;
 import java.util.Objects;
 
+import javax.inject.Inject;
+
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -23,6 +25,9 @@ import ru.leonov.cleararch.R;
 import ru.leonov.cleararch.model.PhotoViewState;
 import ru.leonov.cleararch.model.data.PhotoDataSource;
 import ru.leonov.cleararch.model.data.PhotoRepository;
+import ru.leonov.cleararch.model.di.AppComponentProvider;
+import ru.leonov.cleararch.model.di.IPhotoComponent;
+import ru.leonov.cleararch.model.di.PhotoModule;
 import ru.leonov.cleararch.model.entities.PhotoContainer;
 import ru.leonov.cleararch.model.interactor.photos.IPhotoInteractor;
 import ru.leonov.cleararch.model.interactor.photos.PhotoInteractor;
@@ -44,7 +49,9 @@ public class MainActivity extends AppCompatActivity implements IViewPhotos {
     TextInputEditText etSearch;
 
     //private MainPresenter presenter;
-    private IPhotoPresenter photoPresenter;
+    @Inject
+    IPhotoPresenter photoPresenter;
+
     private ILogger logger;
     private ClearArch app;
 
@@ -77,18 +84,26 @@ public class MainActivity extends AppCompatActivity implements IViewPhotos {
 
     private void initPresenter() {
         //presenter = new MainPresenter(this, app.getRatingLogic(), app.getRunCounter(), logger);
-        PhotoDataSource pds = new PhotoDataSource();
-        IPhotoRepository repository = new PhotoRepository(pds);
-        IPhotoInteractor photosInteractor = new PhotoInteractor(repository);
-        photoPresenter = new PhotoPresenter(this, photosInteractor);
+
+//        PhotoDataSource pds = new PhotoDataSource();
+//        IPhotoRepository repository = new PhotoRepository(pds);
+//        IPhotoInteractor photosInteractor = new PhotoInteractor(repository);
+//        photoPresenter = new PhotoPresenter(this, photosInteractor);
+
+        IPhotoComponent component = ((AppComponentProvider) getApplicationContext())
+                .getAppComponent()
+                .getUserComponent()
+                .setModule(new PhotoModule(this))
+                .build();
+        component.inject(this);
     }
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//
-//        photoPresenter.onStart();
-//    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        photoPresenter.onStart();
+    }
 
     @Override
     protected void onStop() {
@@ -134,16 +149,15 @@ public class MainActivity extends AppCompatActivity implements IViewPhotos {
         });
     }
 
-//    @Override
-//    public Observable<Boolean> onStartIntent() {
-//        return Observable.create(new ObservableOnSubscribe<Boolean>() {
-//            @Override
-//            public void subscribe(final ObservableEmitter<Boolean> emitter) throws Exception {
-//                emitter.onNext(true);
-//            }
-//        });
-//
-//    }
+    @Override
+    public Observable<String> onStartIntent() {
+        return Observable.create(new ObservableOnSubscribe<String>() {
+            @Override
+            public void subscribe(final ObservableEmitter<String> emitter) throws Exception {
+                emitter.onNext("");
+            }
+        });
+    }
 
     private void renderError(Throwable error) {
         if (error != null) {

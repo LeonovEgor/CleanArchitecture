@@ -5,6 +5,6 @@ import java.util.List;
 import io.reactivex.Observable;
 import ru.leonov.cleararch.model.entities.PhotoContainer;
 
-public interface IPhotoDadaSource {
+public interface IPhotoDataSource {
     Observable<List<PhotoContainer>> getPhotos(String search);
 }

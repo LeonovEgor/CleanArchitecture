@@ -5,7 +5,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 import ru.leonov.cleararch.model.data.Model.ApiGetPhotos;
 
-public interface IJsonPlaceholderApiService {
+public interface IJsonPlaceHolderApiService {
 
     @GET("?method=flickr.photos.getRecent&api_key=e35a0796dc99d301d3867ccd3b8b495b&format=json&nojsoncallback=1")
     Observable<ApiGetPhotos> getResentPhotos();

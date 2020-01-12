@@ -14,7 +14,7 @@ public class RequestHelper {
     public static final String API_KEY = "e35a0796dc99d301d3867ccd3b8b495b";
     private static final String BASE_URL = "https://www.flickr.com/services/rest/";
 
-    public static IJsonPlaceholderApiService getJsonPlaceholderApiService() {
+    public static IJsonPlaceHolderApiService getJsonPlaceholderApiService() {
         Gson gson = new GsonBuilder().create();
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
@@ -32,6 +32,6 @@ public class RequestHelper {
                 .build();
 
 
-        return retrofit.create(IJsonPlaceholderApiService.class);
+        return retrofit.create(IJsonPlaceHolderApiService.class);
     }
 }

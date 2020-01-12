@@ -11,7 +11,7 @@ import ru.leonov.cleararch.model.entities.PhotoContainer;
 import ru.leonov.cleararch.model.network.LoadPhotoHelper;
 import ru.leonov.cleararch.model.network.RequestHelper;
 
-public class PhotoDataSource implements IPhotoDadaSource {
+public class PhotoDataSource implements IPhotoDataSource {
     private static final String PHOTO_SIZE = "z";
 
     @Override
