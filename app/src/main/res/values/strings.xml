@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ClearArch</string>
+    <string name="app_name">CleanArch</string>
     <string name="rate_request_caption">Would you like to rate the app?</string>
     <string name="rate_request_show_button">Show</string>
     <string name="information">Information</string>
