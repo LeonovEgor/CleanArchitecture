@@ -11,7 +11,7 @@ import ru.leonov.cleanarch.model.interactor.photos.IPhotoInteractor;
 
 public class PhotoViewModel implements IPhotoViewModel {
 
-    IPhotoInteractor interactor;
+    private IPhotoInteractor interactor;
     private Disposable disposable;
 
     private ObservableField<List<PhotoContainer>> photoObservableField;

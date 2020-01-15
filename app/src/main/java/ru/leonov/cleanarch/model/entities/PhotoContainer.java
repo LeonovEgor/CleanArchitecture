@@ -21,13 +21,9 @@ public class PhotoContainer {
         return description;
     }
 
-//    public String getPhotoUrl() {
-//        return photoUrl;
-//    }
-//
-//    public void setPhotoUrl(String url) {
-//        photoUrl = url;
-//    }
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
 
     @NonNull
     @Override

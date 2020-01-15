@@ -19,6 +19,7 @@ import javax.inject.Inject;
 
 import ru.leonov.cleanarch.R;
 import ru.leonov.cleanarch.databinding.ActivityMainBinding;
+import ru.leonov.cleanarch.databinding.PhotoRecyclerViewLayoutBinding;
 import ru.leonov.cleanarch.model.di.AppComponentProvider;
 import ru.leonov.cleanarch.model.di.IPhotoComponent;
 import ru.leonov.cleanarch.model.di.PhotoModule;
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity  {
 
         binding();
         initView();
-        initPresenter();
+        initInjector();
     }
 
     private void binding() {
@@ -77,7 +78,7 @@ public class MainActivity extends AppCompatActivity  {
         btnSearch = findViewById(R.id.btn_search);
     }
 
-    private void initPresenter() {
+    private void initInjector() {
         //presenter = new MainPresenter(this, app.getRatingLogic(), app.getRunCounter(), logger);
 
         IPhotoComponent component = ((AppComponentProvider) getApplicationContext())
