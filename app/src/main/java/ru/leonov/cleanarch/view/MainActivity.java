@@ -47,14 +47,11 @@ public class MainActivity extends AppCompatActivity implements IViewPhotos {
     IPhotoPresenter photoPresenter;
 
     private ILogger logger;
-    private CleanArch app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        app = (CleanArch)getApplication();
 
         initLogger();
         initView();
@@ -78,11 +75,6 @@ public class MainActivity extends AppCompatActivity implements IViewPhotos {
 
     private void initPresenter() {
         //presenter = new MainPresenter(this, app.getRatingLogic(), app.getRunCounter(), logger);
-
-//        PhotoDataSource pds = new PhotoDataSource();
-//        IPhotoRepository repository = new PhotoRepository(pds);
-//        IPhotoInteractor photosInteractor = new PhotoInteractor(repository);
-//        photoPresenter = new PhotoPresenter(this, photosInteractor);
 
         IPhotoComponent component = ((AppComponentProvider) getApplicationContext())
                 .getAppComponent()

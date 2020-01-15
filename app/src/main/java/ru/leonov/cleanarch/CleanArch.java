@@ -24,9 +24,17 @@ public class CleanArch extends Application implements AppComponentProvider {
 
     private AppComponent appComponent;
 
+    private static CleanArch cleanArch;
+
+    public static CleanArch getInstance() {
+        return cleanArch;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
+
+        cleanArch = this;
 
         appComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule())
