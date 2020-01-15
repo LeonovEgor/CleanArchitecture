@@ -8,40 +8,39 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
 import ru.leonov.cleanarch.R;
+import ru.leonov.cleanarch.databinding.PhotoRecyclerViewLayoutBinding;
 import ru.leonov.cleanarch.model.entities.PhotoContainer;
 import ru.leonov.cleanarch.model.network.LoadPhotoHelper;
 
 public class PhotoRecyclerViewAdapter  extends RecyclerView.Adapter<PhotoRecyclerViewAdapter.ViewHolder> {
 
     private List<PhotoContainer> list;
-    private LayoutInflater mInflater;
-    private ItemClickListener mClickListener;
 
     PhotoRecyclerViewAdapter(Context context, List<PhotoContainer> list) {
-        this.mInflater = LayoutInflater.from(context);
         this.list = list;
     }
 
     @Override
     @NonNull
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.photo_recycler_view_layout, parent, false);
-        return new ViewHolder(view);
+
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        PhotoRecyclerViewLayoutBinding binding =
+                PhotoRecyclerViewLayoutBinding.inflate(inflater, parent, false);
+        return new ViewHolder(binding.getRoot());
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        PhotoContainer container = list.get(position);
-        if (container == null) return;
 
-        holder.tvName.setText(container.getName());
-        holder.tvDescription.setText(container.getDescription());
-        LoadPhotoHelper.getPhoto(container.getPhotoUrl(), holder.ivPhoto);
+        PhotoContainer container = getItem(position);
+        holder.binding.setPhotoContainer(container);
     }
 
     @Override
@@ -49,38 +48,17 @@ public class PhotoRecyclerViewAdapter  extends RecyclerView.Adapter<PhotoRecycle
         return list.size();
     }
 
-
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView tvName;
-        TextView tvDescription;
-        ImageView ivPhoto;
+    class ViewHolder extends RecyclerView.ViewHolder {
+        PhotoRecyclerViewLayoutBinding binding;
 
         ViewHolder(View itemView) {
             super(itemView);
-            tvName = itemView.findViewById(R.id.tv_name);
-            tvDescription = itemView.findViewById(R.id.tv_description);
-            ivPhoto = itemView.findViewById(R.id.iv_photo);
-            itemView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View view) {
-            if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
+            binding = DataBindingUtil.bind(itemView);
         }
     }
 
     // convenience method for getting data at click position
-    PhotoContainer getItem(int id) {
+    private PhotoContainer getItem(int id) {
         return list.get(id);
-    }
-
-    // allows clicks events to be caught
-    void setClickListener(ItemClickListener itemClickListener) {
-        this.mClickListener = itemClickListener;
-    }
-
-    // parent activity will implement this method to respond to click events
-    public interface ItemClickListener {
-        void onItemClick(View view, int position);
     }
 }

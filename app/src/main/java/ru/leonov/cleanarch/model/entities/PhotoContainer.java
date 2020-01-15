@@ -3,9 +3,9 @@ package ru.leonov.cleanarch.model.entities;
 import androidx.annotation.NonNull;
 
 public class PhotoContainer {
-    private String name;
-    private String description;
-    private String photoUrl;
+    public String name;
+    public String description;
+    public String photoUrl;
 
     public PhotoContainer(String name, String description, String photoUrl) {
         this.name = name;
@@ -21,9 +21,13 @@ public class PhotoContainer {
         return description;
     }
 
-    public String getPhotoUrl() {
-        return photoUrl;
-    }
+//    public String getPhotoUrl() {
+//        return photoUrl;
+//    }
+//
+//    public void setPhotoUrl(String url) {
+//        photoUrl = url;
+//    }
 
     @NonNull
     @Override

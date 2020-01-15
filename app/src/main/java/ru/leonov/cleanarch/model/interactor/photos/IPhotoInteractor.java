@@ -1,8 +1,10 @@
 package ru.leonov.cleanarch.model.interactor.photos;
 
+import java.util.List;
+
 import io.reactivex.Observable;
-import ru.leonov.cleanarch.model.PhotoViewState;
+import ru.leonov.cleanarch.model.entities.PhotoContainer;
 
 public interface IPhotoInteractor {
-    Observable<PhotoViewState> getPhotos(String search);
+    Observable<List<PhotoContainer>> getPhotos(String search);
 }

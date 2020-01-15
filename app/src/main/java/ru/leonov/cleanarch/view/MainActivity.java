@@ -6,6 +6,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,27 +14,21 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.List;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import ru.leonov.cleanarch.CleanArch;
 import ru.leonov.cleanarch.R;
-import ru.leonov.cleanarch.model.PhotoViewState;
+import ru.leonov.cleanarch.databinding.ActivityMainBinding;
 import ru.leonov.cleanarch.model.di.AppComponentProvider;
 import ru.leonov.cleanarch.model.di.IPhotoComponent;
 import ru.leonov.cleanarch.model.di.PhotoModule;
 import ru.leonov.cleanarch.model.entities.PhotoContainer;
 import ru.leonov.cleanarch.model.utils.logger.ILogger;
 import ru.leonov.cleanarch.model.utils.logger.MyLogger;
-import ru.leonov.cleanarch.presenter.IPhotoPresenter;
-import ru.leonov.cleanarch.presenter.IViewPhotos;
+import ru.leonov.cleanarch.viewmodel.IPhotoViewModel;
 
 
-public class MainActivity extends AppCompatActivity implements IViewPhotos {
+public class MainActivity extends AppCompatActivity  {
     private final int COLUMN_NUMBERS = 2;
 
     private TextView tvInfo;
@@ -43,8 +38,9 @@ public class MainActivity extends AppCompatActivity implements IViewPhotos {
     TextInputEditText etSearch;
 
     //private MainPresenter presenter;
+
     @Inject
-    IPhotoPresenter photoPresenter;
+    IPhotoViewModel viewModel;
 
     private ILogger logger;
 
@@ -54,8 +50,16 @@ public class MainActivity extends AppCompatActivity implements IViewPhotos {
         setContentView(R.layout.activity_main);
 
         initLogger();
+        ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        binding.setViewModel(viewModel);
+
+        binding();
         initView();
         initPresenter();
+    }
+
+    private void binding() {
+
     }
 
     private void initLogger() {
@@ -79,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements IViewPhotos {
         IPhotoComponent component = ((AppComponentProvider) getApplicationContext())
                 .getAppComponent()
                 .getUserComponent()
-                .setModule(new PhotoModule(this))
+                .setModule(new PhotoModule())
                 .build();
         component.inject(this);
     }
@@ -88,12 +92,12 @@ public class MainActivity extends AppCompatActivity implements IViewPhotos {
     protected void onStart() {
         super.onStart();
 
-        photoPresenter.onStart();
+        viewModel.onStart();
     }
 
     @Override
     protected void onStop() {
-        photoPresenter.onStop();
+        viewModel.onStop();
 
         super.onStop();
     }
@@ -112,38 +116,6 @@ public class MainActivity extends AppCompatActivity implements IViewPhotos {
 //                .setActionTextColor(Color.MAGENTA) // цвет текста у кнопки действия
 //                .show();
 //    }
-
-    @Override
-    public void render(PhotoViewState viewState) {
-        renderProgress(viewState.isLoading());
-        renderError(viewState.getError());
-        renderPhotos(viewState.isLoading(), viewState.getPhotos());
-    }
-
-    @Override
-    public Observable<String> userActionIntent() {
-        return Observable.create(new ObservableOnSubscribe<String>() {
-            @Override
-            public void subscribe(final ObservableEmitter<String> emitter) throws Exception {
-                btnSearch.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        emitter.onNext(Objects.requireNonNull(etSearch.getText()).toString());
-                    }
-                });
-            }
-        });
-    }
-
-    @Override
-    public Observable<String> onStartIntent() {
-        return Observable.create(new ObservableOnSubscribe<String>() {
-            @Override
-            public void subscribe(final ObservableEmitter<String> emitter) throws Exception {
-                emitter.onNext("");
-            }
-        });
-    }
 
     private void renderError(Throwable error) {
         if (error != null) {
