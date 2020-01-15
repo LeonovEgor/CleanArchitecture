@@ -14,7 +14,7 @@ import ru.leonov.cleanarch.model.interactor.counter.RunCounter;
 import ru.leonov.cleanarch.model.interactor.main.IRatingLogic;
 import ru.leonov.cleanarch.model.interactor.main.RatingLogic;
 
-public class ClearArch extends Application implements AppComponentProvider {
+public class CleanArch extends Application implements AppComponentProvider {
 
     private IRunCounter runCounter;
     private IRatingLogic ratingLogic;

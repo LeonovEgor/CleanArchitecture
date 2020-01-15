@@ -20,7 +20,7 @@ import javax.inject.Inject;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
-import ru.leonov.cleanarch.ClearArch;
+import ru.leonov.cleanarch.CleanArch;
 import ru.leonov.cleanarch.R;
 import ru.leonov.cleanarch.model.PhotoViewState;
 import ru.leonov.cleanarch.model.di.AppComponentProvider;
@@ -47,14 +47,14 @@ public class MainActivity extends AppCompatActivity implements IViewPhotos {
     IPhotoPresenter photoPresenter;
 
     private ILogger logger;
-    private ClearArch app;
+    private CleanArch app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        app = (ClearArch)getApplication();
+        app = (CleanArch)getApplication();
 
         initLogger();
         initView();
