@@ -1,60 +1,88 @@
 package ru.leonov.cleanarch.viewmodel;
 
+import android.os.Bundle;
+
+import androidx.annotation.Nullable;
 import androidx.databinding.ObservableField;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 import java.util.List;
 
 import io.reactivex.Observer;
+import io.reactivex.Scheduler;
 import io.reactivex.disposables.Disposable;
 import ru.leonov.cleanarch.model.entities.PhotoContainer;
 import ru.leonov.cleanarch.model.interactor.photos.IPhotoInteractor;
 
-public class PhotoViewModel implements IPhotoViewModel {
+public class PhotoViewModel extends ViewModel {
+    private static final String SAVE_SEARCH_STRING = "search_string";
 
     private IPhotoInteractor interactor;
     private Disposable disposable;
 
-    private ObservableField<List<PhotoContainer>> photoObservableField;
-    private ObservableField<String> errorObservableField;
-    private ObservableField<String> resultObservableField;
+    private MutableLiveData<List<PhotoContainer>> photoLiveData;
+    private MutableLiveData<String> errorLiveData;
+    private MutableLiveData<String> resultLiveData;
 
-    public PhotoViewModel(IPhotoInteractor interactor) {
+    private final Scheduler subscribeOn;
+    private final Scheduler observeOn;
+
+    private String searchString = "";
+
+    public PhotoViewModel(Scheduler subscribeOn, Scheduler observeOn, IPhotoInteractor interactor) {
+        this.subscribeOn = subscribeOn;
+        this.observeOn = observeOn;
         this.interactor = interactor;
-        this.photoObservableField = new ObservableField<>();
-        this.errorObservableField = new ObservableField<>();
-        this.resultObservableField = new ObservableField<>();
+
+        this.photoLiveData = new MutableLiveData<>();
+        this.errorLiveData = new MutableLiveData<>();
+        this.resultLiveData = new MutableLiveData<>();
     }
 
-    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            searchString = savedInstanceState.getString(SAVE_SEARCH_STRING, "");
+        }
+    }
+
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(SAVE_SEARCH_STRING, searchString);
+    }
+
     public void onStart() {
-        interactor.getPhotos("").subscribe(new PhotoObserver());
-    }
-
-    @Override
-    public void onStop() {
-        if (disposable != null) {
-            disposable.dispose();
+        if (photoLiveData.getValue() == null) {
+            interactor.getPhotos(searchString)
+                    .subscribeOn(subscribeOn)
+                    .observeOn(observeOn)
+                    .subscribe(new PhotoObserver());
         }
     }
 
     @Override
+    protected void onCleared() {
+        if (disposable != null) {
+            disposable.dispose();
+        }
+
+        super.onCleared();
+    }
+
     public void onSearchPhotoAction() {
-        resultObservableField.set("");
+        resultLiveData.setValue("");
     }
 
-    @Override
-    public ObservableField<List<PhotoContainer>> getPhotos() {
-        return photoObservableField;
+    public LiveData<List<PhotoContainer>> getPhotos() {
+        return photoLiveData;
     }
 
-    @Override
-    public ObservableField<String> getError() {
-        return errorObservableField;
+    public LiveData<String> getError() {
+        return errorLiveData;
     }
 
-    @Override
-    public ObservableField<String> getResult() {
-        return resultObservableField;
+    public LiveData<String> getResult() {
+        return resultLiveData;
     }
 
     private class PhotoObserver implements Observer<List<PhotoContainer>> {
@@ -67,18 +95,16 @@ public class PhotoViewModel implements IPhotoViewModel {
         @Override
         public void onNext(List<PhotoContainer> photoContainerList) {
             // полученные данные передаем в обозреваемое поле, которое уведомит подписчиков
-            photoObservableField.set(photoContainerList);
+            photoLiveData.setValue(photoContainerList);
         }
 
         @Override
         public void onError(Throwable e) {
             // ошибку тоже передаем в обозреваемое поле
-            errorObservableField.set(e.getMessage());
+            errorLiveData.setValue(e.getMessage());
         }
 
         @Override
-        public void onComplete() {
-
-        }
+        public void onComplete() { }
     }
 }

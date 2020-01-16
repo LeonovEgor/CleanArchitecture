@@ -1,37 +1,29 @@
 package ru.leonov.cleanarch.view;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import androidx.databinding.Observable;
-import androidx.databinding.ObservableField;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.util.ArrayList;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
-import javax.inject.Inject;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 import ru.leonov.cleanarch.R;
 import ru.leonov.cleanarch.databinding.ActivityMainBinding;
-import ru.leonov.cleanarch.databinding.PhotoRecyclerViewLayoutBinding;
-import ru.leonov.cleanarch.model.di.AppComponentProvider;
-import ru.leonov.cleanarch.model.di.IPhotoComponent;
-import ru.leonov.cleanarch.model.di.PhotoModule;
 import ru.leonov.cleanarch.model.entities.PhotoContainer;
 import ru.leonov.cleanarch.model.utils.logger.ILogger;
 import ru.leonov.cleanarch.model.utils.logger.MyLogger;
-import ru.leonov.cleanarch.viewmodel.IPhotoViewModel;
 import ru.leonov.cleanarch.viewmodel.PhotoViewModel;
 
 
@@ -46,28 +38,38 @@ public class MainActivity extends AppCompatActivity  {
 
     //private MainPresenter presenter;
 
-    @Inject
-    IPhotoViewModel viewModel;
+    //@Inject
+    PhotoViewModel viewModel;
 
     private ILogger logger;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        PhotoViewModelFactory photoViewModelFactory = new PhotoViewModelFactory();
+        viewModel = ViewModelProviders.of(this, photoViewModelFactory).get(PhotoViewModel.class);
+
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+
+        viewModel.onCreate(savedInstanceState);
+        ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        binding.setViewModel(viewModel);
+        binding.setLifecycleOwner(this);
 
         initLogger();
-        binding();
+        //bindingViewModel();
+        //binding();
         initView();
-        initInjector();
+        //initInjector();
+        initViewModelObserve();
+    }
+
+    private void bindingViewModel() {
+
     }
 
     private void binding() {
         ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.setViewModel(viewModel);
-
-        PhotoRecyclerViewAdapter adapter = new PhotoRecyclerViewAdapter();
-        recyclerView.setAdapter(adapter);
     }
 
     private void initLogger() {
@@ -88,27 +90,44 @@ public class MainActivity extends AppCompatActivity  {
     private void initInjector() {
         //presenter = new MainPresenter(this, app.getRatingLogic(), app.getRunCounter(), logger);
 
-        IPhotoComponent component = ((AppComponentProvider) getApplicationContext())
-                .getAppComponent()
-                .getUserComponent()
-                .setModule(new PhotoModule())
-                .build();
-        component.inject(this);
+//        IPhotoComponent component = ((AppComponentProvider) getApplicationContext())
+//                .getAppComponent()
+//                .getUserComponent()
+//                .setModule(new PhotoModule())
+//                .build();
+//        component.inject(this);
     }
+
+    private void initViewModelObserve() {
+
+        PhotoViewModel photoViewModel = ViewModelProviders.of(this).get(PhotoViewModel.class);
+        //От модели получаем LiveData
+        LiveData<List<PhotoContainer>> data = photoViewModel.getPhotos();
+        //подписываемся на получение данных
+        data.observe(this, new Observer<List<PhotoContainer>>() {
+            @Override
+            public void onChanged(List<PhotoContainer> photoContainerList) {
+                GridLayoutManager layoutManager = new GridLayoutManager(getBaseContext(), COLUMN_NUMBERS);
+                PhotoRecyclerViewAdapter recyclerViewAdapter = new PhotoRecyclerViewAdapter();
+                recyclerView.setLayoutManager(layoutManager);
+                recyclerView.setAdapter(recyclerViewAdapter);
+                recyclerViewAdapter.setData(photoContainerList);
+            }
+        });
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NotNull Bundle outState) {
+        viewModel.onSaveInstanceState(outState);
+        super.onSaveInstanceState(outState);
+    }
+
 
     @Override
     protected void onStart() {
         super.onStart();
 
         viewModel.onStart();
-        viewModel.getPhotos();
-    }
-
-    @Override
-    protected void onStop() {
-        viewModel.onStop();
-
-        super.onStop();
     }
 
 //    @Override
@@ -126,20 +145,20 @@ public class MainActivity extends AppCompatActivity  {
 //                .show();
 //    }
 
-    private void renderError(Throwable error) {
-        if (error != null) {
-            tvInfo.setVisibility(View.VISIBLE);
-            String msg = "Error: " + error.getMessage();
-            tvInfo.setText(msg);
-        }
-    }
+//    private void renderError(Throwable error) {
+//        if (error != null) {
+//            tvInfo.setVisibility(View.VISIBLE);
+//            String msg = "Error: " + error.getMessage();
+//            tvInfo.setText(msg);
+//        }
+//    }
 
-    private void renderProgress(boolean loading) {
-        progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
-
-        if (loading) tvInfo.setVisibility(View.VISIBLE);
-        tvInfo.setText(getString(R.string.loading));
-    }
+//    private void renderProgress(boolean loading) {
+//        progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
+//
+//        if (loading) tvInfo.setVisibility(View.VISIBLE);
+//        tvInfo.setText(getString(R.string.loading));
+//    }
 
 //    private void renderPhotos(boolean loading, List<PhotoContainer> list) {
 //        if (loading) return;

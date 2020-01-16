@@ -1,19 +1,21 @@
 package ru.leonov.cleanarch.view;
 
-import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
-import androidx.databinding.DataBindingUtil;
+import androidx.databinding.BindingAdapter;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import ru.leonov.cleanarch.databinding.PhotoRecyclerViewLayoutBinding;
 import ru.leonov.cleanarch.model.entities.PhotoContainer;
+import ru.leonov.cleanarch.model.network.LoadPhotoHelper;
 
 public class PhotoRecyclerViewAdapter  extends RecyclerView.Adapter<PhotoRecyclerViewAdapter.ViewHolder> {
 
@@ -50,24 +52,20 @@ public class PhotoRecyclerViewAdapter  extends RecyclerView.Adapter<PhotoRecycle
         return list.get(id);
     }
 
+    @BindingAdapter("bind:imageUrl")
+    public static void loadImage(ImageView imageView, String url) {
+        LoadPhotoHelper.getPhoto(url, imageView);
+    }
 
-    //    class ViewHolder extends RecyclerView.ViewHolder {
-//        PhotoRecyclerViewLayoutBinding binding;
-//
-//        ViewHolder(View itemView) {
-//            super(itemView);
-//            binding = DataBindingUtil.bind(itemView);
-//        }
-//    }
     class ViewHolder extends RecyclerView.ViewHolder {
         PhotoRecyclerViewLayoutBinding binding;
 
         ViewHolder(PhotoRecyclerViewLayoutBinding binding) {
             super(binding.getRoot());
-            binding.executePendingBindings();
+            this.binding = binding;
         }
 
-        public void bind(PhotoContainer container) {
+        void bind(PhotoContainer container) {
             binding.setPhotoContainer(container);
             binding.executePendingBindings();
         }
