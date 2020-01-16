@@ -7,16 +7,21 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.databinding.Observable;
+import androidx.databinding.ObservableField;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import ru.leonov.cleanarch.R;
 import ru.leonov.cleanarch.databinding.ActivityMainBinding;
 import ru.leonov.cleanarch.databinding.PhotoRecyclerViewLayoutBinding;
@@ -27,6 +32,7 @@ import ru.leonov.cleanarch.model.entities.PhotoContainer;
 import ru.leonov.cleanarch.model.utils.logger.ILogger;
 import ru.leonov.cleanarch.model.utils.logger.MyLogger;
 import ru.leonov.cleanarch.viewmodel.IPhotoViewModel;
+import ru.leonov.cleanarch.viewmodel.PhotoViewModel;
 
 
 public class MainActivity extends AppCompatActivity  {
@@ -51,16 +57,17 @@ public class MainActivity extends AppCompatActivity  {
         setContentView(R.layout.activity_main);
 
         initLogger();
-        ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        binding.setViewModel(viewModel);
-
         binding();
         initView();
         initInjector();
     }
 
     private void binding() {
+        ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        binding.setViewModel(viewModel);
 
+        PhotoRecyclerViewAdapter adapter = new PhotoRecyclerViewAdapter();
+        recyclerView.setAdapter(adapter);
     }
 
     private void initLogger() {
@@ -94,6 +101,7 @@ public class MainActivity extends AppCompatActivity  {
         super.onStart();
 
         viewModel.onStart();
+        viewModel.getPhotos();
     }
 
     @Override
@@ -133,18 +141,17 @@ public class MainActivity extends AppCompatActivity  {
         tvInfo.setText(getString(R.string.loading));
     }
 
-    private void renderPhotos(boolean loading, List<PhotoContainer> list) {
-        if (loading) return;
-
-        if (list != null) {
-            PhotoRecyclerViewAdapter adapter = new PhotoRecyclerViewAdapter(this, list);
-            //adapter.setClickListener(this);
-            recyclerView.setAdapter(adapter);
-            tvInfo.setVisibility(View.GONE);
-
-        } else {
-            tvInfo.setVisibility(View.VISIBLE);
-            tvInfo.setText(getString(R.string.no_photo));
-        }
-    }
+//    private void renderPhotos(boolean loading, List<PhotoContainer> list) {
+//        if (loading) return;
+//
+//        if (list != null) {
+//            PhotoRecyclerViewAdapter adapter = new PhotoRecyclerViewAdapter(this, list);
+//            recyclerView.setAdapter(adapter);
+//            tvInfo.setVisibility(View.GONE);
+//
+//        } else {
+//            tvInfo.setVisibility(View.VISIBLE);
+//            tvInfo.setText(getString(R.string.no_photo));
+//        }
+//    }
 }
