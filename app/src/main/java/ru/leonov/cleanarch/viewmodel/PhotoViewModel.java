@@ -3,7 +3,6 @@ package ru.leonov.cleanarch.viewmodel;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
-import androidx.databinding.ObservableField;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -18,6 +17,7 @@ import ru.leonov.cleanarch.model.interactor.photos.IPhotoInteractor;
 
 public class PhotoViewModel extends ViewModel {
     private static final String SAVE_SEARCH_STRING = "search_string";
+    private static final String LOADING = "Loading...";
 
     private IPhotoInteractor interactor;
     private Disposable disposable;
@@ -26,10 +26,11 @@ public class PhotoViewModel extends ViewModel {
     private MutableLiveData<String> errorLiveData;
     private MutableLiveData<String> resultLiveData;
 
+    private String searchString = "";
+
     private final Scheduler subscribeOn;
     private final Scheduler observeOn;
 
-    private String searchString = "";
 
     public PhotoViewModel(Scheduler subscribeOn, Scheduler observeOn, IPhotoInteractor interactor) {
         this.subscribeOn = subscribeOn;
@@ -57,7 +58,9 @@ public class PhotoViewModel extends ViewModel {
                     .subscribeOn(subscribeOn)
                     .observeOn(observeOn)
                     .subscribe(new PhotoObserver());
+            resultLiveData.setValue(LOADING);
         }
+
     }
 
     @Override
@@ -69,8 +72,12 @@ public class PhotoViewModel extends ViewModel {
         super.onCleared();
     }
 
-    public void onSearchPhotoAction() {
-        resultLiveData.setValue("");
+    public void onSearchPhotoAction(String str) {
+        resultLiveData.setValue(LOADING);
+        interactor.getPhotos(str)
+                .subscribeOn(subscribeOn)
+                .observeOn(observeOn)
+                .subscribe(new PhotoObserver());
     }
 
     public LiveData<List<PhotoContainer>> getPhotos() {
@@ -85,6 +92,10 @@ public class PhotoViewModel extends ViewModel {
         return resultLiveData;
     }
 
+    public String getSearchString() {
+        return searchString;
+    }
+
     private class PhotoObserver implements Observer<List<PhotoContainer>> {
 
         @Override
@@ -94,13 +105,12 @@ public class PhotoViewModel extends ViewModel {
 
         @Override
         public void onNext(List<PhotoContainer> photoContainerList) {
-            // полученные данные передаем в обозреваемое поле, которое уведомит подписчиков
             photoLiveData.setValue(photoContainerList);
+            resultLiveData.setValue("");
         }
 
         @Override
         public void onError(Throwable e) {
-            // ошибку тоже передаем в обозреваемое поле
             errorLiveData.setValue(e.getMessage());
         }
 

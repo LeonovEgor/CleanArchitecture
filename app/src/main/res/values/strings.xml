@@ -7,7 +7,7 @@
     <string name="search">Search</string>
     <string name="til_search_helper_text">Enter the required information</string>
     <string name="no_photo">No photo</string>
-    <string name="loading">Loading...</string>
+    <string name="loading">Loading…</string>
     <string name="tv_name">tv_name</string>
     <string name="tv_description">tv_description</string>
 </resources>

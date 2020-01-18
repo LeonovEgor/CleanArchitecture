@@ -1,7 +1,7 @@
 package ru.leonov.cleanarch.view;
 
 import android.os.Bundle;
-import android.widget.ProgressBar;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +18,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Objects;
 
 import ru.leonov.cleanarch.R;
 import ru.leonov.cleanarch.databinding.ActivityMainBinding;
@@ -30,9 +31,7 @@ import ru.leonov.cleanarch.viewmodel.PhotoViewModel;
 public class MainActivity extends AppCompatActivity  {
     private final int COLUMN_NUMBERS = 2;
 
-    private TextView tvInfo;
     RecyclerView recyclerView;
-    ProgressBar progressBar;
     MaterialButton btnSearch;
     TextInputEditText etSearch;
 
@@ -51,25 +50,17 @@ public class MainActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
 
         viewModel.onCreate(savedInstanceState);
-        ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        binding.setViewModel(viewModel);
-        binding.setLifecycleOwner(this);
 
         initLogger();
-        //bindingViewModel();
-        //binding();
+        binding();
         initView();
-        //initInjector();
         initViewModelObserve();
-    }
-
-    private void bindingViewModel() {
-
     }
 
     private void binding() {
         ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.setViewModel(viewModel);
+        binding.setLifecycleOwner(this);
     }
 
     private void initLogger() {
@@ -77,33 +68,24 @@ public class MainActivity extends AppCompatActivity  {
     }
 
     private void initView() {
-        tvInfo = findViewById(R.id.tv_info);
 
         recyclerView = findViewById(R.id.rv_photos);
         recyclerView.setLayoutManager(new GridLayoutManager(this, COLUMN_NUMBERS));
 
-        progressBar = findViewById(R.id.progress_bar);
         etSearch = findViewById(R.id.tiSearch);
         btnSearch = findViewById(R.id.btn_search);
-    }
 
-    private void initInjector() {
-        //presenter = new MainPresenter(this, app.getRatingLogic(), app.getRunCounter(), logger);
-
-//        IPhotoComponent component = ((AppComponentProvider) getApplicationContext())
-//                .getAppComponent()
-//                .getUserComponent()
-//                .setModule(new PhotoModule())
-//                .build();
-//        component.inject(this);
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                viewModel.onSearchPhotoAction(Objects.requireNonNull(etSearch.getText()).toString());
+            }
+        });
     }
 
     private void initViewModelObserve() {
 
         PhotoViewModel photoViewModel = ViewModelProviders.of(this).get(PhotoViewModel.class);
-        //От модели получаем LiveData
         LiveData<List<PhotoContainer>> data = photoViewModel.getPhotos();
-        //подписываемся на получение данных
         data.observe(this, new Observer<List<PhotoContainer>>() {
             @Override
             public void onChanged(List<PhotoContainer> photoContainerList) {
@@ -145,32 +127,14 @@ public class MainActivity extends AppCompatActivity  {
 //                .show();
 //    }
 
-//    private void renderError(Throwable error) {
-//        if (error != null) {
-//            tvInfo.setVisibility(View.VISIBLE);
-//            String msg = "Error: " + error.getMessage();
-//            tvInfo.setText(msg);
-//        }
+//    private void initInjector() {
+//        presenter = new MainPresenter(this, app.getRatingLogic(), app.getRunCounter(), logger);
+//        IPhotoComponent component = ((AppComponentProvider) getApplicationContext())
+//                .getAppComponent()
+//                .getUserComponent()
+//                .setModule(new PhotoModule())
+//                .build();
+//        component.inject(this);
 //    }
 
-//    private void renderProgress(boolean loading) {
-//        progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
-//
-//        if (loading) tvInfo.setVisibility(View.VISIBLE);
-//        tvInfo.setText(getString(R.string.loading));
-//    }
-
-//    private void renderPhotos(boolean loading, List<PhotoContainer> list) {
-//        if (loading) return;
-//
-//        if (list != null) {
-//            PhotoRecyclerViewAdapter adapter = new PhotoRecyclerViewAdapter(this, list);
-//            recyclerView.setAdapter(adapter);
-//            tvInfo.setVisibility(View.GONE);
-//
-//        } else {
-//            tvInfo.setVisibility(View.VISIBLE);
-//            tvInfo.setText(getString(R.string.no_photo));
-//        }
-//    }
 }

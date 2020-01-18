@@ -54,7 +54,8 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/tiSearch"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.searchString}" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -68,8 +69,7 @@
             android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
             app:layout_constraintBottom_toBottomOf="@id/tilSearch"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tilSearch"
-            android:onClick="@{() -> viewModel.onSearchPhotoAction()}"/>
+            app:layout_constraintTop_toTopOf="@id/tilSearch" />
 
         <ProgressBar
             android:id="@+id/progress_bar"
@@ -77,7 +77,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:visibility="gone"
+            android:visibility="@{TextUtils.isEmpty(viewModel.result) ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="@id/tv_info"
             app:layout_constraintLeft_toRightOf="@id/tv_info"
             app:layout_constraintRight_toRightOf="parent"

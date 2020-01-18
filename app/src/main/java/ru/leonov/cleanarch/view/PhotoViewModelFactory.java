@@ -14,10 +14,6 @@ import ru.leonov.cleanarch.model.interactor.photos.PhotoInteractor;
 import ru.leonov.cleanarch.model.repository.IPhotoRepository;
 import ru.leonov.cleanarch.viewmodel.PhotoViewModel;
 
-/**
- * Фабрика для создания ViewModel с нестандартным конструктором
- * Если ваша ViewModel не использует параметры конструктора фабрика не нужна
- */
 public class PhotoViewModelFactory implements ViewModelProvider.Factory {
     @NonNull
     @Override
