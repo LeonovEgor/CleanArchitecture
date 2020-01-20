@@ -13,9 +13,9 @@ import ru.leonov.cleanarch.model.entities.PhotoContainer;
 public class PhotoPositionalDataSource extends PositionalDataSource<PhotoContainer> {
     private static final String TAG = PhotoPositionalDataSource.class.getSimpleName();
 
-    private final PhotoRepository2 photoRepository;
+    private final PhotoRepository photoRepository;
 
-    public PhotoPositionalDataSource(PhotoRepository2 photoRepository) {
+    public PhotoPositionalDataSource(PhotoRepository photoRepository) {
         this.photoRepository = photoRepository;
     }
 

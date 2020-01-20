@@ -3,14 +3,17 @@ package ru.leonov.cleanarch.view;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.BindingAdapter;
 import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import ru.leonov.cleanarch.R;
 import ru.leonov.cleanarch.databinding.PhotoRecyclerViewLayoutBinding;
 import ru.leonov.cleanarch.model.entities.PhotoContainer;
+import ru.leonov.cleanarch.model.network.LoadPhotoHelper;
 
 public class PhotoAdapter extends PagedListAdapter<PhotoContainer, PhotoAdapter.PhotoViewHolder> {
 
@@ -48,6 +51,11 @@ public class PhotoAdapter extends PagedListAdapter<PhotoContainer, PhotoAdapter.
                 holder.bind(getItem(position));
                 holder.binding.setPhotoContainer(container);
             }
+    }
+
+    @BindingAdapter("bind:imageUrl")
+    public static void loadImage(ImageView imageView, String url) {
+        LoadPhotoHelper.getPhoto(url, imageView);
     }
 
     class PhotoViewHolder extends RecyclerView.ViewHolder {

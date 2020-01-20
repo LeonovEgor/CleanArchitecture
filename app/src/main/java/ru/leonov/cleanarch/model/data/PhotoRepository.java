@@ -1,20 +1,63 @@
 package ru.leonov.cleanarch.model.data;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-import io.reactivex.Observable;
+import retrofit2.Response;
+import ru.leonov.cleanarch.model.data.Model.ApiGetPhotos;
+import ru.leonov.cleanarch.model.data.Model.ApiPhoto;
 import ru.leonov.cleanarch.model.entities.PhotoContainer;
+import ru.leonov.cleanarch.model.network.LoadPhotoHelper;
+import ru.leonov.cleanarch.model.network.RequestHelper2;
 import ru.leonov.cleanarch.model.repository.IPhotoRepository;
 
 public class PhotoRepository implements IPhotoRepository {
-    private IPhotoDataSource photoDataSource;
+    private static final String PHOTO_SIZE = "z";
+    private final PhotosMapper mapper;
 
-    public PhotoRepository(IPhotoDataSource photoDataSource) {
-        this.photoDataSource = photoDataSource;
+    public PhotoRepository() {
+        mapper = new PhotosMapper();
     }
 
-    @Override
-    public Observable<List<PhotoContainer>> getPhotos(String search) {
-        return photoDataSource.getPhotos(search);
+    public List<PhotoContainer> getPhotos(int perPage, int page) throws IOException {
+
+        Response<ApiGetPhotos> response = RequestHelper2
+                .getJsonPlaceholderApiService()
+                .getResentPhotos(perPage, page)
+                .execute();
+
+        return mapper.mapList(Objects.requireNonNull(response.body()));
+    }
+
+    private class PhotosMapper {
+        List<PhotoContainer> mapList(ApiGetPhotos api) {
+            List<PhotoContainer> list;
+            if (api.getPhotos() != null) {
+                list = new ArrayList<>(api.getPhotos().getPhotoList().size());
+
+                for (ApiPhoto apiPhoto : api.getPhotos().getPhotoList()) {
+                    list.add(map(apiPhoto));
+                }
+            }
+            else {
+                list = new ArrayList<>();
+            }
+
+            return list;
+
+        }
+
+        private PhotoContainer map(ApiPhoto apiPhoto) {
+            return new PhotoContainer(
+                    apiPhoto.getOwner(),
+                    apiPhoto.getTitle(),
+                    compileUrl(apiPhoto));
+        }
+
+        private String compileUrl(ApiPhoto apiPhoto) {
+            return LoadPhotoHelper.getPhotoPath(apiPhoto.getFarm(), apiPhoto.getServer(), apiPhoto.getId(), apiPhoto.getSecret(), PHOTO_SIZE);
+        }
     }
 }

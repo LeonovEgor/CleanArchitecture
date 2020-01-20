@@ -5,8 +5,6 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -17,7 +15,6 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -25,9 +22,8 @@ import java.util.concurrent.Executors;
 import ru.leonov.cleanarch.R;
 import ru.leonov.cleanarch.databinding.ActivityMainBinding;
 import ru.leonov.cleanarch.model.data.PhotoPositionalDataSource;
-import ru.leonov.cleanarch.model.data.PhotoRepository2;
 import ru.leonov.cleanarch.model.entities.PhotoContainer;
-import ru.leonov.cleanarch.model.network.IJsonPlaceHolderApiService2;
+import ru.leonov.cleanarch.model.utils.executor.MainThreadExecutor;
 import ru.leonov.cleanarch.model.utils.logger.ILogger;
 import ru.leonov.cleanarch.model.utils.logger.MyLogger;
 import ru.leonov.cleanarch.viewmodel.PhotoViewModel;
@@ -59,7 +55,7 @@ public class MainActivity extends AppCompatActivity  {
         initLogger();
         binding();
         initView();
-        initViewModelObserve();
+        initPagingRecycler();
     }
 
     private void binding() {
@@ -87,27 +83,35 @@ public class MainActivity extends AppCompatActivity  {
         });
     }
 
-    private void initViewModelObserve() {
+    private void initPagingRecycler() {
 
-        PhotoViewModel photoViewModel = ViewModelProviders.of(this).get(PhotoViewModel.class);
-        LiveData<List<PhotoContainer>> data = photoViewModel.getPhotos();
-        data.observe(this, new Observer<List<PhotoContainer>>() {
-            @Override
-            public void onChanged(List<PhotoContainer> photoContainerList) {
-                GridLayoutManager layoutManager = new GridLayoutManager(getBaseContext(), COLUMN_NUMBERS);
-                PhotoAdapter adapter = new PhotoAdapter(getApplicationContext());
-                recyclerView.setLayoutManager(layoutManager);
-                recyclerView.setAdapter(adapter);
-
-
-            }
-        });
+        GridLayoutManager layoutManager = new GridLayoutManager(getBaseContext(), COLUMN_NUMBERS);
+        final PhotoAdapter adapter = new PhotoAdapter(getApplicationContext());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
 
         final PagedList.Config config = config();
         final Executor fetchExecutor = Executors.newSingleThreadExecutor();
-        //IJsonPlaceHolderApiService2 api = new Jso
-        PhotoRepository2 repository = new PhotoRepository2()
-        PhotoPositionalDataSource dataSource = new PhotoPositionalDataSource()
+        PhotoPositionalDataSource dataSource = viewModel.getDataSource();
+
+        final PagedList.Builder<Integer, PhotoContainer> pagedListBuilder =
+                new PagedList.Builder<>(dataSource, config)
+                        .setFetchExecutor(fetchExecutor)
+                        .setNotifyExecutor(new MainThreadExecutor());
+
+        fetchExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                final PagedList<PhotoContainer> pagedList = pagedListBuilder.build();
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.submitList(pagedList);
+                    }
+                });
+            }
+        });
     }
 
     private PagedList.Config config() {

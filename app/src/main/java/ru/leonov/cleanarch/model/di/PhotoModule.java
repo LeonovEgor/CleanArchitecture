@@ -1,14 +1,14 @@
-package ru.leonov.cleanarch.model.di;
+//package ru.leonov.cleanarch.model.di;
 
-import dagger.Module;
-import dagger.Provides;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
-import ru.leonov.cleanarch.model.interactor.photos.IPhotoInteractor;
-import ru.leonov.cleanarch.model.interactor.photos.PhotoInteractor;
-import ru.leonov.cleanarch.model.repository.IPhotoRepository;
-import ru.leonov.cleanarch.viewmodel.PhotoViewModel;
+//import dagger.Module;
+//import dagger.Provides;
+//
+//import io.reactivex.android.schedulers.AndroidSchedulers;
+//import io.reactivex.schedulers.Schedulers;
+//import ru.leonov.cleanarch.model.interactor.photos.IPhotoInteractor;
+//import ru.leonov.cleanarch.model.interactor.photos.PhotoInteractor;
+//import ru.leonov.cleanarch.model.repository.IPhotoRepository;
+//import ru.leonov.cleanarch.viewmodel.PhotoViewModel;
 
 //@Module()
 //public class PhotoModule {
