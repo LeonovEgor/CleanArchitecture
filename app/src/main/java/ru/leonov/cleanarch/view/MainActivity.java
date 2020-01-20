@@ -2,13 +2,13 @@ package ru.leonov.cleanarch.view;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.paging.PagedList;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,10 +19,15 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import ru.leonov.cleanarch.R;
 import ru.leonov.cleanarch.databinding.ActivityMainBinding;
+import ru.leonov.cleanarch.model.data.PhotoPositionalDataSource;
+import ru.leonov.cleanarch.model.data.PhotoRepository2;
 import ru.leonov.cleanarch.model.entities.PhotoContainer;
+import ru.leonov.cleanarch.model.network.IJsonPlaceHolderApiService2;
 import ru.leonov.cleanarch.model.utils.logger.ILogger;
 import ru.leonov.cleanarch.model.utils.logger.MyLogger;
 import ru.leonov.cleanarch.viewmodel.PhotoViewModel;
@@ -90,12 +95,28 @@ public class MainActivity extends AppCompatActivity  {
             @Override
             public void onChanged(List<PhotoContainer> photoContainerList) {
                 GridLayoutManager layoutManager = new GridLayoutManager(getBaseContext(), COLUMN_NUMBERS);
-                PhotoRecyclerViewAdapter recyclerViewAdapter = new PhotoRecyclerViewAdapter();
+                PhotoAdapter adapter = new PhotoAdapter(getApplicationContext());
                 recyclerView.setLayoutManager(layoutManager);
-                recyclerView.setAdapter(recyclerViewAdapter);
-                recyclerViewAdapter.setData(photoContainerList);
+                recyclerView.setAdapter(adapter);
+
+
             }
         });
+
+        final PagedList.Config config = config();
+        final Executor fetchExecutor = Executors.newSingleThreadExecutor();
+        //IJsonPlaceHolderApiService2 api = new Jso
+        PhotoRepository2 repository = new PhotoRepository2()
+        PhotoPositionalDataSource dataSource = new PhotoPositionalDataSource()
+    }
+
+    private PagedList.Config config() {
+        return new PagedList.Config.Builder()
+            .setEnablePlaceholders(true)
+            .setPageSize(5)
+            .setInitialLoadSizeHint(30)
+            .setPrefetchDistance(10)
+            .build();
     }
 
     @Override
