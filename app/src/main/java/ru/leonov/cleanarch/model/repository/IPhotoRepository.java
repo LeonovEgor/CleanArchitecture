@@ -7,5 +7,5 @@ import io.reactivex.Observable;
 import ru.leonov.cleanarch.model.entities.PhotoContainer;
 
 public interface IPhotoRepository {
-    List<PhotoContainer> getPhotos(int perPage, int page) throws IOException;
+    List<PhotoContainer> getPhotos(String searchText, int perPage, int page) throws IOException;
 }

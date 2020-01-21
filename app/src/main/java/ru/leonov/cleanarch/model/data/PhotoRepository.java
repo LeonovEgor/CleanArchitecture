@@ -21,12 +21,18 @@ public class PhotoRepository implements IPhotoRepository {
         mapper = new PhotosMapper();
     }
 
-    public List<PhotoContainer> getPhotos(int perPage, int page) throws IOException {
+    public List<PhotoContainer> getPhotos(String searchText, int perPage, int page) throws IOException {
 
-        Response<ApiGetPhotos> response = RequestHelper2
-                .getJsonPlaceholderApiService()
-                .getResentPhotos(perPage, page)
-                .execute();
+
+        Response<ApiGetPhotos> response = searchText.equals("")?
+                RequestHelper2
+                        .getJsonPlaceholderApiService()
+                        .getResentPhotos(perPage, page)
+                        .execute()
+                :RequestHelper2
+                        .getJsonPlaceholderApiService()
+                        .searchPhotos(searchText, perPage, page)
+                        .execute();
 
         return mapper.mapList(Objects.requireNonNull(response.body()));
     }

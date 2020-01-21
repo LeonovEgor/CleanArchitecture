@@ -5,6 +5,7 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -21,7 +22,6 @@ import java.util.concurrent.Executors;
 
 import ru.leonov.cleanarch.R;
 import ru.leonov.cleanarch.databinding.ActivityMainBinding;
-import ru.leonov.cleanarch.model.data.PhotoPositionalDataSource;
 import ru.leonov.cleanarch.model.entities.PhotoContainer;
 import ru.leonov.cleanarch.model.utils.executor.MainThreadExecutor;
 import ru.leonov.cleanarch.model.utils.logger.ILogger;
@@ -50,12 +50,12 @@ public class MainActivity extends AppCompatActivity  {
 
         super.onCreate(savedInstanceState);
 
-        viewModel.onCreate(savedInstanceState);
-
         initLogger();
         binding();
         initView();
-        initPagingRecycler();
+        PhotoAdapter adapter = initPagingRecycler();
+        runPagedListThreadExecutor(adapter);
+        setupSearchButtonClick();
     }
 
     private void binding() {
@@ -78,40 +78,42 @@ public class MainActivity extends AppCompatActivity  {
 
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                viewModel.onSearchPhotoAction(Objects.requireNonNull(etSearch.getText()).toString());
+                viewModel.setSearchString(Objects.requireNonNull(etSearch.getText()).toString());
             }
         });
     }
 
-    private void initPagingRecycler() {
-
+    private PhotoAdapter initPagingRecycler() {
         GridLayoutManager layoutManager = new GridLayoutManager(getBaseContext(), COLUMN_NUMBERS);
-        final PhotoAdapter adapter = new PhotoAdapter(getApplicationContext());
+        PhotoAdapter adapter = new PhotoAdapter(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+        return adapter;
+    }
 
-        final PagedList.Config config = config();
+    private void runPagedListThreadExecutor(final PhotoAdapter adapter) {
         final Executor fetchExecutor = Executors.newSingleThreadExecutor();
-        PhotoPositionalDataSource dataSource = viewModel.getDataSource();
-
-        final PagedList.Builder<Integer, PhotoContainer> pagedListBuilder =
-                new PagedList.Builder<>(dataSource, config)
-                        .setFetchExecutor(fetchExecutor)
-                        .setNotifyExecutor(new MainThreadExecutor());
+        final PagedList.Builder<Integer, PhotoContainer> pagedListBuilder = createPagedList(fetchExecutor);
 
         fetchExecutor.execute(new Runnable() {
             @Override
             public void run() {
                 final PagedList<PhotoContainer> pagedList = pagedListBuilder.build();
-
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         adapter.submitList(pagedList);
+                        viewModel.setResult("");
                     }
                 });
             }
         });
+    }
+
+    private PagedList.Builder<Integer, PhotoContainer> createPagedList(final Executor fetchExecutor) {
+        return new PagedList.Builder<>(viewModel.getDataSource(), config())
+                        .setFetchExecutor(fetchExecutor)
+                        .setNotifyExecutor(new MainThreadExecutor());
     }
 
     private PagedList.Config config() {
@@ -123,18 +125,25 @@ public class MainActivity extends AppCompatActivity  {
             .build();
     }
 
+    private void setupSearchButtonClick() {
+        viewModel.getSearchString().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String searchString) {
+                updateSearch();
+            }
+        });
+    }
+
+    public void updateSearch() {
+        PhotoAdapter adapter = initPagingRecycler();
+        adapter.notifyDataSetChanged();
+        runPagedListThreadExecutor(adapter);
+    }
+
     @Override
     protected void onSaveInstanceState(@NotNull Bundle outState) {
         viewModel.onSaveInstanceState(outState);
         super.onSaveInstanceState(outState);
-    }
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        viewModel.onStart();
     }
 
 //    @Override
@@ -161,5 +170,4 @@ public class MainActivity extends AppCompatActivity  {
 //                .build();
 //        component.inject(this);
 //    }
-
 }

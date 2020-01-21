@@ -14,6 +14,7 @@ public class PhotoPositionalDataSource extends PositionalDataSource<PhotoContain
     private static final String TAG = PhotoPositionalDataSource.class.getSimpleName();
 
     private final PhotoRepository photoRepository;
+    private String searchString = "";
 
     public PhotoPositionalDataSource(PhotoRepository photoRepository) {
         this.photoRepository = photoRepository;
@@ -25,7 +26,7 @@ public class PhotoPositionalDataSource extends PositionalDataSource<PhotoContain
                 ", requestedLoadSize = " + params.requestedLoadSize);
         List<PhotoContainer> result;
         try {
-            result = photoRepository.getPhotos(params.requestedLoadSize, params.requestedStartPosition);
+            result = photoRepository.getPhotos(searchString, params.requestedLoadSize, params.requestedStartPosition);
             int realPosition = params.requestedStartPosition;
             callback.onResult(result, realPosition, 1000);
         } catch (IOException e) {
@@ -38,10 +39,14 @@ public class PhotoPositionalDataSource extends PositionalDataSource<PhotoContain
         Log.d(TAG, "loadRange, startPosition = " + params.startPosition + ", loadSize = " + params.loadSize);
         List<PhotoContainer> result = null;
         try {
-            result = photoRepository.getPhotos(params.loadSize, params.startPosition);
+            result = photoRepository.getPhotos(searchString, params.loadSize, params.startPosition);
             callback.onResult(result);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setSearchString(String str) {
+        searchString = str;
     }
 }

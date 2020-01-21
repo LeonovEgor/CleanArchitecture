@@ -6,17 +6,15 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import androidx.paging.PagedList;
 
-import java.util.List;
-
-import io.reactivex.disposables.Disposable;
 import ru.leonov.cleanarch.model.data.PhotoPositionalDataSource;
 import ru.leonov.cleanarch.model.entities.PhotoContainer;
 
 public class PhotoViewModel extends ViewModel {
     private static final String SAVE_SEARCH_STRING = "search_string";
 
-    private MutableLiveData<List<PhotoContainer>> photoLiveData;
+    private MutableLiveData<String > searchLiveData;
     private MutableLiveData<String> errorLiveData;
     private MutableLiveData<String> resultLiveData;
 
@@ -28,7 +26,7 @@ public class PhotoViewModel extends ViewModel {
     public PhotoViewModel(PhotoPositionalDataSource dataSource) {
         this.dataSource = dataSource;
 
-        this.photoLiveData = new MutableLiveData<>();
+        this.searchLiveData = new MutableLiveData<>();
         this.errorLiveData = new MutableLiveData<>();
         this.resultLiveData = new MutableLiveData<>();
     }
@@ -43,29 +41,22 @@ public class PhotoViewModel extends ViewModel {
         outState.putString(SAVE_SEARCH_STRING, searchString);
     }
 
-    public void onStart() {
-    }
-
-    public void onSearchPhotoAction(String str) {
-    }
-
-    public LiveData<List<PhotoContainer>> getPhotos() {
-        return photoLiveData;
-    }
-
     public LiveData<String> getError() {
         return errorLiveData;
     }
 
-    public LiveData<String> getResult() {
-        return resultLiveData;
+    public LiveData<String> getSearchString() {
+        return searchLiveData;
     }
 
-    public String getSearchString() {
-        return searchString;
+    public void setSearchString(String str) {
+        dataSource.setSearchString(str);
+        searchLiveData.setValue(str);
     }
 
-    public PhotoPositionalDataSource getDataSource() {
-        return dataSource;
-    }
+    public LiveData<String> getResult() { return resultLiveData;  }
+
+    public void setResult(String str) { resultLiveData.setValue(str);  }
+
+    public PhotoPositionalDataSource getDataSource() { return dataSource;  }
 }
