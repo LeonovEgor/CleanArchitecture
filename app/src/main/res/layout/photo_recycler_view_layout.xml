@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
-        <!-- здесь описывается переменная, ссылается на нашу ViewModel -->
-        <!-- https://habr.com/ru/company/dataart/blog/267735/ -->
         <variable
             name="photoContainer"
             type="ru.leonov.cleanarch.model.entities.PhotoContainer" />
