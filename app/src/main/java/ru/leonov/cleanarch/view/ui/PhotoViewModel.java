@@ -1,4 +1,4 @@
-package ru.leonov.cleanarch.viewmodel;
+package ru.leonov.cleanarch.view.ui;
 
 import android.os.Bundle;
 

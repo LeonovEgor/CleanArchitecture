@@ -1,4 +1,4 @@
-package ru.leonov.cleanarch.view;
+package ru.leonov.cleanarch.view.ui.PhotoList;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -19,7 +19,7 @@ public class PhotoAdapter extends PagedListAdapter<PhotoContainer, PhotoAdapter.
 
     private Context context;
 
-    PhotoAdapter(Context context) {
+    public PhotoAdapter(Context context) {
         super(new DiffUtilCallback());
 
         this.context = context;

@@ -10,7 +10,7 @@ import ru.leonov.cleanarch.model.data.Model.ApiGetPhotos;
 import ru.leonov.cleanarch.model.data.Model.ApiPhoto;
 import ru.leonov.cleanarch.model.entities.PhotoContainer;
 import ru.leonov.cleanarch.model.network.LoadPhotoHelper;
-import ru.leonov.cleanarch.model.network.RequestHelper2;
+import ru.leonov.cleanarch.model.network.RequestHelper;
 import ru.leonov.cleanarch.model.repository.IPhotoRepository;
 
 public class PhotoRepository implements IPhotoRepository {
@@ -23,13 +23,12 @@ public class PhotoRepository implements IPhotoRepository {
 
     public List<PhotoContainer> getPhotos(String searchText, int perPage, int page) throws IOException {
 
-
         Response<ApiGetPhotos> response = searchText.equals("")?
-                RequestHelper2
+                RequestHelper
                         .getJsonPlaceholderApiService()
                         .getResentPhotos(perPage, page)
                         .execute()
-                :RequestHelper2
+                : RequestHelper
                         .getJsonPlaceholderApiService()
                         .searchPhotos(searchText, perPage, page)
                         .execute();

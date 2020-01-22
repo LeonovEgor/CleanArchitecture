@@ -9,14 +9,15 @@ import java.io.IOException;
 import java.util.List;
 
 import ru.leonov.cleanarch.model.entities.PhotoContainer;
+import ru.leonov.cleanarch.model.repository.IPhotoRepository;
 
 public class PhotoPositionalDataSource extends PositionalDataSource<PhotoContainer> {
     private static final String TAG = PhotoPositionalDataSource.class.getSimpleName();
 
-    private final PhotoRepository photoRepository;
+    private final IPhotoRepository photoRepository;
     private String searchString = "";
 
-    public PhotoPositionalDataSource(PhotoRepository photoRepository) {
+    public PhotoPositionalDataSource(IPhotoRepository photoRepository) {
         this.photoRepository = photoRepository;
     }
 

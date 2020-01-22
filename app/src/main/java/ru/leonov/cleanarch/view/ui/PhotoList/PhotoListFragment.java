@@ -1,10 +1,12 @@
-package ru.leonov.cleanarch.view;
+package ru.leonov.cleanarch.view.ui.PhotoList;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.paging.PagedList;
@@ -14,67 +16,81 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import ru.leonov.cleanarch.CleanArch;
 import ru.leonov.cleanarch.R;
-import ru.leonov.cleanarch.databinding.ActivityMainBinding;
+import ru.leonov.cleanarch.databinding.FragmentPhotoListBinding;
 import ru.leonov.cleanarch.model.entities.PhotoContainer;
 import ru.leonov.cleanarch.model.utils.executor.MainThreadExecutor;
 import ru.leonov.cleanarch.model.utils.logger.ILogger;
 import ru.leonov.cleanarch.model.utils.logger.MyLogger;
-import ru.leonov.cleanarch.viewmodel.PhotoViewModel;
+import ru.leonov.cleanarch.presenter.PhotosPresenter;
+import ru.leonov.cleanarch.view.ui.PhotoViewModel;
 
-
-public class MainActivity extends AppCompatActivity  {
+public class PhotoListFragment extends Fragment {
     private final int COLUMN_NUMBERS = 2;
 
-    RecyclerView recyclerView;
-    MaterialButton btnSearch;
-    TextInputEditText etSearch;
-
-    //private MainPresenter presenter;
-
-    //@Inject
-    PhotoViewModel viewModel;
-
+    private PhotosPresenter presenter;
+    private PhotoViewModel viewModel;
     private ILogger logger;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        PhotoViewModelFactory photoViewModelFactory = new PhotoViewModelFactory();
-        viewModel = ViewModelProviders.of(this, photoViewModelFactory).get(PhotoViewModel.class);
+    private RecyclerView recyclerView;
+    private MaterialButton btnSearch;
+    private TextInputEditText etSearch;
 
-        super.onCreate(savedInstanceState);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        //View view = inflater.inflate(R.layout.fragment_photo_list, container, false);
+
+
+        PhotoViewModelFactory photoViewModelFactory = new PhotoViewModelFactory();
+        viewModel = ViewModelProviders
+                .of(this, photoViewModelFactory)
+                .get(PhotoViewModel.class);
 
         initLogger();
-        binding();
-        initView();
+        FragmentPhotoListBinding binding = binding(inflater, container);
+        initView(binding.getRoot());
         PhotoAdapter adapter = initPagingRecycler();
         runPagedListThreadExecutor(adapter);
         setupSearchButtonClick();
+        presenter = new PhotosPresenter(CleanArch.getInstance().getNavigator());
+
+//        view.findViewById(R.id.bottom).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                presenter.onBottomButtonClick();
+//            }
+//        });
+
+        return binding.getRoot();
     }
 
-    private void binding() {
-        ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+    private FragmentPhotoListBinding binding(LayoutInflater inflater, ViewGroup container) {
+
+        FragmentPhotoListBinding binding = DataBindingUtil.inflate(
+                inflater, R.layout.fragment_photo_list, container, false);
+
         binding.setViewModel(viewModel);
         binding.setLifecycleOwner(this);
+        return binding;
     }
 
     private void initLogger() {
         logger = new MyLogger();
     }
 
-    private void initView() {
+    private void initView(View view) {
 
-        recyclerView = findViewById(R.id.rv_photos);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, COLUMN_NUMBERS));
+        recyclerView = view.findViewById(R.id.rv_photos);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), COLUMN_NUMBERS));
 
-        etSearch = findViewById(R.id.tiSearch);
-        btnSearch = findViewById(R.id.btn_search);
+        etSearch = view.findViewById(R.id.tiSearch);
+        btnSearch = view.findViewById(R.id.btn_search);
 
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
@@ -84,8 +100,8 @@ public class MainActivity extends AppCompatActivity  {
     }
 
     private PhotoAdapter initPagingRecycler() {
-        GridLayoutManager layoutManager = new GridLayoutManager(getBaseContext(), COLUMN_NUMBERS);
-        PhotoAdapter adapter = new PhotoAdapter(getApplicationContext());
+        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), COLUMN_NUMBERS);
+        PhotoAdapter adapter = new PhotoAdapter(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
         return adapter;
@@ -99,7 +115,8 @@ public class MainActivity extends AppCompatActivity  {
             @Override
             public void run() {
                 final PagedList<PhotoContainer> pagedList = pagedListBuilder.build();
-                runOnUiThread(new Runnable() {
+
+                Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         adapter.submitList(pagedList);
@@ -112,17 +129,17 @@ public class MainActivity extends AppCompatActivity  {
 
     private PagedList.Builder<Integer, PhotoContainer> createPagedList(final Executor fetchExecutor) {
         return new PagedList.Builder<>(viewModel.getDataSource(), config())
-                        .setFetchExecutor(fetchExecutor)
-                        .setNotifyExecutor(new MainThreadExecutor());
+                .setFetchExecutor(fetchExecutor)
+                .setNotifyExecutor(new MainThreadExecutor());
     }
 
     private PagedList.Config config() {
         return new PagedList.Config.Builder()
-            .setEnablePlaceholders(true)
-            .setPageSize(5)
-            .setInitialLoadSizeHint(30)
-            .setPrefetchDistance(10)
-            .build();
+                .setEnablePlaceholders(true)
+                .setPageSize(5)
+                .setInitialLoadSizeHint(30)
+                .setPrefetchDistance(10)
+                .build();
     }
 
     private void setupSearchButtonClick() {
@@ -134,40 +151,11 @@ public class MainActivity extends AppCompatActivity  {
         });
     }
 
-    public void updateSearch() {
+    private void updateSearch() {
         PhotoAdapter adapter = initPagingRecycler();
         adapter.notifyDataSetChanged();
         runPagedListThreadExecutor(adapter);
     }
 
-    @Override
-    protected void onSaveInstanceState(@NotNull Bundle outState) {
-        viewModel.onSaveInstanceState(outState);
-        super.onSaveInstanceState(outState);
-    }
 
-//    @Override
-//    public void showRate() {
-//        View.OnClickListener yesOnClickListener = new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // Do something
-//            }
-//        };
-//
-//        Snackbar.make(tvInfo, getString(R.string.rate_request_caption), Snackbar.LENGTH_LONG)
-//                .setAction(getString(R.string.rate_request_show_button), yesOnClickListener)
-//                .setActionTextColor(Color.MAGENTA) // цвет текста у кнопки действия
-//                .show();
-//    }
-
-//    private void initInjector() {
-//        presenter = new MainPresenter(this, app.getRatingLogic(), app.getRunCounter(), logger);
-//        IPhotoComponent component = ((AppComponentProvider) getApplicationContext())
-//                .getAppComponent()
-//                .getUserComponent()
-//                .setModule(new PhotoModule())
-//                .build();
-//        component.inject(this);
-//    }
 }
