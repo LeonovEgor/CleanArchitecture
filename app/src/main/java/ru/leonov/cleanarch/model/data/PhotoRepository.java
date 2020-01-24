@@ -14,7 +14,7 @@ import ru.leonov.cleanarch.model.network.RequestHelper;
 import ru.leonov.cleanarch.model.repository.IPhotoRepository;
 
 public class PhotoRepository implements IPhotoRepository {
-    private static final String PHOTO_SIZE = "z";
+    private static final String PHOTO_SIZE = "b";
     private final PhotosMapper mapper;
 
     public PhotoRepository() {

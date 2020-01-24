@@ -9,15 +9,15 @@
     </style>
 
     <style name="Margin" parent="AppTheme">
-        <item name="android:layout_margin">8dp</item>
+        <item name="android:layout_margin">4dp</item>
     </style>
 
     <style name="Title" parent="Margin">
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
     <style name="Text" parent="Margin">
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">10sp</item>
     </style>
 
     <style name="MatButton" parent="Theme.MaterialComponents">

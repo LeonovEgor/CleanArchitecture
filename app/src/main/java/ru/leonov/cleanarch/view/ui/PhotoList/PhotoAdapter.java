@@ -22,7 +22,7 @@ public class PhotoAdapter extends PagedListAdapter<PhotoContainer, PhotoAdapter.
     private Context context;
     private PhotoListViewModel viewModel;
 
-    public PhotoAdapter(Context context, PhotoListViewModel viewModel) {
+    PhotoAdapter(Context context, PhotoListViewModel viewModel) {
         super(new DiffUtilCallback());
 
         this.context = context;
@@ -48,9 +48,7 @@ public class PhotoAdapter extends PagedListAdapter<PhotoContainer, PhotoAdapter.
 
             @Override
             public void onClick(View v) {
-
                 viewModel.onPhotoClick(binding.getPhotoContainer());
-                //recycler.getAdapter().getItem(position)
             }
         });
     }
@@ -80,7 +78,6 @@ public class PhotoAdapter extends PagedListAdapter<PhotoContainer, PhotoAdapter.
 
     class PhotoViewHolder extends RecyclerView.ViewHolder {
         PhotoRecyclerViewLayoutBinding binding;
-        ImageView ivPhoto;
 
         PhotoViewHolder(PhotoRecyclerViewLayoutBinding binding) {
             super(binding.getRoot());
