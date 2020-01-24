@@ -2,7 +2,9 @@ package ru.leonov.cleanarch.model.entities;
 
 import androidx.annotation.NonNull;
 
-public class PhotoContainer {
+import java.io.Serializable;
+
+public class PhotoContainer implements Serializable {
     public String name;
     public String description;
     public String photoUrl;

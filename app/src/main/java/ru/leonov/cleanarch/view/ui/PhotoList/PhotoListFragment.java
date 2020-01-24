@@ -20,21 +20,18 @@ import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import ru.leonov.cleanarch.CleanArch;
 import ru.leonov.cleanarch.R;
 import ru.leonov.cleanarch.databinding.FragmentPhotoListBinding;
 import ru.leonov.cleanarch.model.entities.PhotoContainer;
 import ru.leonov.cleanarch.model.utils.executor.MainThreadExecutor;
 import ru.leonov.cleanarch.model.utils.logger.ILogger;
 import ru.leonov.cleanarch.model.utils.logger.MyLogger;
-import ru.leonov.cleanarch.presenter.PhotosPresenter;
-import ru.leonov.cleanarch.view.ui.PhotoViewModel;
+import ru.leonov.cleanarch.view.ui.PhotoListViewModel;
 
 public class PhotoListFragment extends Fragment {
     private final int COLUMN_NUMBERS = 2;
 
-    private PhotosPresenter presenter;
-    private PhotoViewModel viewModel;
+    private PhotoListViewModel viewModel;
     private ILogger logger;
 
     private RecyclerView recyclerView;
@@ -45,10 +42,9 @@ public class PhotoListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        PhotoViewModelFactory factory = new PhotoViewModelFactory();
         viewModel = ViewModelProviders
-                .of(this, factory)
-                .get(PhotoViewModel.class);
+                .of(this, new PhotoViewModelFactory())
+                .get(PhotoListViewModel.class);
 
         initLogger();
         FragmentPhotoListBinding binding = binding(inflater, container);
@@ -56,7 +52,7 @@ public class PhotoListFragment extends Fragment {
         PhotoAdapter adapter = initPagingRecycler();
         runPagedListThreadExecutor(adapter);
         setupSearchButtonClick();
-        presenter = new PhotosPresenter(CleanArch.getInstance().getNavigator());
+
 
 //        view.findViewById(R.id.bottom).setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -99,7 +95,7 @@ public class PhotoListFragment extends Fragment {
 
     private PhotoAdapter initPagingRecycler() {
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), COLUMN_NUMBERS);
-        PhotoAdapter adapter = new PhotoAdapter(getContext());
+        PhotoAdapter adapter = new PhotoAdapter(getContext(), viewModel);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
         return adapter;

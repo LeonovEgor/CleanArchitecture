@@ -1,6 +1,7 @@
 package ru.leonov.cleanarch.presenter;
 
 
+import ru.leonov.cleanarch.model.entities.PhotoContainer;
 import ru.leonov.cleanarch.view.Navigator.INavigator;
 
 public class PhotosPresenter implements IPhotosPresenter {
@@ -11,12 +12,12 @@ public class PhotosPresenter implements IPhotosPresenter {
     }
 
     @Override
-    public void showDetails() {
-        navigator.getPhotosDetailsScreen();
+    public void showDetails(PhotoContainer photoContainer) {
+        navigator.gotoPhotosDetailsScreen(photoContainer);
     }
 
     @Override
     public void onStart() {
-        navigator.getPhotosListScreen();
+        navigator.gotoPhotosListScreen();
     }
 }

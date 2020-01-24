@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import ru.leonov.cleanarch.model.data.PhotoPositionalDataSource;
 import ru.leonov.cleanarch.model.data.PhotoRepository;
-import ru.leonov.cleanarch.view.ui.PhotoViewModel;
+import ru.leonov.cleanarch.view.ui.PhotoListViewModel;
 
 @SuppressWarnings("unchecked")
 public class PhotoViewModelFactory implements ViewModelProvider.Factory {
@@ -17,8 +17,8 @@ public class PhotoViewModelFactory implements ViewModelProvider.Factory {
         PhotoRepository repository = new PhotoRepository();
         PhotoPositionalDataSource dataSource = new PhotoPositionalDataSource(repository);
 
-        if (modelClass == PhotoViewModel.class) {
-            return (T) new PhotoViewModel(dataSource);
+        if (modelClass == PhotoListViewModel.class) {
+            return (T) new PhotoListViewModel(dataSource);
         } else {
             throw new IllegalArgumentException("model class: " + modelClass);
         }

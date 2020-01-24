@@ -6,6 +6,8 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import ru.leonov.cleanarch.R;
+import ru.leonov.cleanarch.model.entities.PhotoContainer;
+import ru.leonov.cleanarch.view.ui.PhotoDetails.DetailFragment;
 import ru.leonov.cleanarch.view.ui.PhotoList.PhotoListFragment;
 
 public class MainNavigator implements INavigator {
@@ -14,13 +16,13 @@ public class MainNavigator implements INavigator {
     private FragmentActivity activity;
 
     @Override
-    public void getPhotosListScreen() {
+    public void gotoPhotosListScreen() {
         replaceFragment(new PhotoListFragment(), false);
     }
 
     @Override
-    public void getPhotosDetailsScreen() {
-        //replaceFragment(new Fragment2(), true);
+    public void gotoPhotosDetailsScreen(PhotoContainer photoContainer) {
+        replaceFragment(DetailFragment.newInstance(photoContainer), true);
     }
 
     private void replaceFragment(Fragment fragment, boolean addToBackStack) {

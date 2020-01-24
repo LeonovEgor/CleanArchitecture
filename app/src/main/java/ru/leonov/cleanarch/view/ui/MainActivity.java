@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity  {
         CleanArch.getInstance().getNavigator().attachActivity(this);
 
         if (savedInstanceState == null) {
-            CleanArch.getInstance().getNavigator().getPhotosListScreen();
+            CleanArch.getInstance().getNavigator().gotoPhotosListScreen();
         }
 
     }

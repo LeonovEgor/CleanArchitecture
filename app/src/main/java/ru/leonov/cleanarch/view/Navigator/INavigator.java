@@ -2,10 +2,12 @@ package ru.leonov.cleanarch.view.Navigator;
 
 import androidx.fragment.app.FragmentActivity;
 
-public interface INavigator {
-    void getPhotosListScreen();
+import ru.leonov.cleanarch.model.entities.PhotoContainer;
 
-    void getPhotosDetailsScreen();
+public interface INavigator {
+    void gotoPhotosListScreen();
+
+    void gotoPhotosDetailsScreen(PhotoContainer photoContainer);
 
     void attachActivity(FragmentActivity activity);
 

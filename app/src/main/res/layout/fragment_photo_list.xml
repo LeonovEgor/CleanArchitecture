@@ -4,7 +4,7 @@
         <!-- здесь описывается переменная, ссылается на нашу ViewModel -->
         <variable
             name="viewModel"
-            type="ru.leonov.cleanarch.view.ui.PhotoViewModel" />
+            type="ru.leonov.cleanarch.view.ui.PhotoListViewModel" />
         <import type="android.view.View"/>
         <import type="android.text.TextUtils"/>
     </data>

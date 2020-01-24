@@ -6,13 +6,17 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import androidx.paging.PagedList;
 
+import ru.leonov.cleanarch.CleanArch;
 import ru.leonov.cleanarch.model.data.PhotoPositionalDataSource;
 import ru.leonov.cleanarch.model.entities.PhotoContainer;
+import ru.leonov.cleanarch.presenter.IPhotosPresenter;
+import ru.leonov.cleanarch.presenter.PhotosPresenter;
 
-public class PhotoViewModel extends ViewModel {
+public class PhotoListViewModel extends ViewModel {
     private static final String SAVE_SEARCH_STRING = "search_string";
+
+    IPhotosPresenter photosPresenter;
 
     private MutableLiveData<String > searchLiveData;
     private MutableLiveData<String> errorLiveData;
@@ -23,12 +27,14 @@ public class PhotoViewModel extends ViewModel {
     private final PhotoPositionalDataSource dataSource;
 
 
-    public PhotoViewModel(PhotoPositionalDataSource dataSource) {
+    public PhotoListViewModel(PhotoPositionalDataSource dataSource) {
         this.dataSource = dataSource;
 
         this.searchLiveData = new MutableLiveData<>();
         this.errorLiveData = new MutableLiveData<>();
         this.resultLiveData = new MutableLiveData<>();
+
+        photosPresenter = new PhotosPresenter(CleanArch.getInstance().getNavigator());
     }
 
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,6 +45,11 @@ public class PhotoViewModel extends ViewModel {
 
     public void onSaveInstanceState(Bundle outState) {
         outState.putString(SAVE_SEARCH_STRING, searchString);
+    }
+
+    public void onPhotoClick(PhotoContainer photoContainer) {
+        photosPresenter.showDetails(photoContainer);
+
     }
 
     public LiveData<String> getError() {
@@ -59,4 +70,6 @@ public class PhotoViewModel extends ViewModel {
     public void setResult(String str) { resultLiveData.setValue(str);  }
 
     public PhotoPositionalDataSource getDataSource() { return dataSource;  }
+
+    public IPhotosPresenter getPhotoPresenter() {return photosPresenter;}
 }
