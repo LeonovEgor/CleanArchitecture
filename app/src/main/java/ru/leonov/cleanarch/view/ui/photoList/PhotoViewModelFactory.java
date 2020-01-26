@@ -1,12 +1,11 @@
-package ru.leonov.cleanarch.view.ui.PhotoList;
+package ru.leonov.cleanarch.view.ui.photoList;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import ru.leonov.cleanarch.model.data.PhotoPositionalDataSource;
-import ru.leonov.cleanarch.model.data.PhotoRepository;
-import ru.leonov.cleanarch.view.ui.PhotoListViewModel;
+import ru.leonov.cleanarch.model.data.photo.PhotoPositionalDataSource;
+import ru.leonov.cleanarch.model.data.photo.PhotoRepository;
 
 @SuppressWarnings("unchecked")
 public class PhotoViewModelFactory implements ViewModelProvider.Factory {

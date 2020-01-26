@@ -1,4 +1,4 @@
-package ru.leonov.cleanarch.model.data.Model;
+package ru.leonov.cleanarch.model.data.model.photos;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

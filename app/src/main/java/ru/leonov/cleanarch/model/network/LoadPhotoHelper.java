@@ -10,7 +10,14 @@ import ru.leonov.cleanarch.R;
 
 public class LoadPhotoHelper {
     public static void getPhoto(String url, ImageView imageView) {
-        Picasso.get().load(url).error(R.drawable.no_image).into(imageView);
+        Picasso
+                .get()
+                .load(url)
+                .error(R.drawable.no_image)
+                .placeholder(R.drawable.image)
+                .resizeDimen(R.dimen.image_size, R.dimen.image_size)
+                .centerCrop()
+                .into(imageView);
     }
 
     /**

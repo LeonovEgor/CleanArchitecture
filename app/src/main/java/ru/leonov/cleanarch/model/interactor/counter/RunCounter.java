@@ -1,13 +1,13 @@
 package ru.leonov.cleanarch.model.interactor.counter;
 
-import ru.leonov.cleanarch.model.data.StorageRepository;
+import ru.leonov.cleanarch.model.data.storage.StorageRepository;
 import ru.leonov.cleanarch.model.entities.Settings;
 import ru.leonov.cleanarch.model.repository.IStorageRepository;
 
 public class RunCounter implements IRunCounter{
-    private IStorageRepository repository;
+    private final IStorageRepository repository;
 
-    public RunCounter(StorageRepository repository) {
+    public RunCounter(IStorageRepository repository) {
         this.repository = repository;
     }
 

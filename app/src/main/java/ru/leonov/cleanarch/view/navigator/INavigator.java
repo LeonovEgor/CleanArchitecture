@@ -1,4 +1,4 @@
-package ru.leonov.cleanarch.view.Navigator;
+package ru.leonov.cleanarch.view.navigator;
 
 import androidx.fragment.app.FragmentActivity;
 
@@ -11,6 +11,6 @@ public interface INavigator {
 
     void attachActivity(FragmentActivity activity);
 
-    public void detachActivity();
+    void detachActivity();
 }
 

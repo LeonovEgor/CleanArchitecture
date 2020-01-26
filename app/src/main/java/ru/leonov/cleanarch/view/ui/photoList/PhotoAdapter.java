@@ -1,4 +1,4 @@
-package ru.leonov.cleanarch.view.ui.PhotoList;
+package ru.leonov.cleanarch.view.ui.photoList;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -15,17 +15,14 @@ import ru.leonov.cleanarch.R;
 import ru.leonov.cleanarch.databinding.PhotoRecyclerViewLayoutBinding;
 import ru.leonov.cleanarch.model.entities.PhotoContainer;
 import ru.leonov.cleanarch.model.network.LoadPhotoHelper;
-import ru.leonov.cleanarch.view.ui.PhotoListViewModel;
 
 public class PhotoAdapter extends PagedListAdapter<PhotoContainer, PhotoAdapter.PhotoViewHolder> {
 
-    private Context context;
-    private PhotoListViewModel viewModel;
+    private final PhotoListViewModel viewModel;
 
-    PhotoAdapter(Context context, PhotoListViewModel viewModel) {
+    PhotoAdapter(PhotoListViewModel viewModel) {
         super(new DiffUtilCallback());
 
-        this.context = context;
         this.viewModel = viewModel;
     }
 
@@ -58,20 +55,13 @@ public class PhotoAdapter extends PagedListAdapter<PhotoContainer, PhotoAdapter.
             position) {
 
             PhotoContainer container = getItem(position);
-
-            if (container == null) {
-                String loading = context.getString(R.string.loading);
-                container = new PhotoContainer(loading, "", loading);
-                holder.bind(container);
-                holder.binding.setPhotoContainer(container);
-
-            } else {
+            if (container != null) {
                 holder.bind(getItem(position));
                 holder.binding.setPhotoContainer(container);
             }
     }
 
-    @BindingAdapter("bind:imageUrl")
+    @BindingAdapter({"imageUrl"})
     public static void loadImage(ImageView imageView, String url) {
         LoadPhotoHelper.getPhoto(url, imageView);
     }

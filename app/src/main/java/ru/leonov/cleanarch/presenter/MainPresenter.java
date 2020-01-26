@@ -2,7 +2,7 @@ package ru.leonov.cleanarch.presenter;
 
 
 public class MainPresenter {
-    private static final String LOG_TAG = "MAIN_PRESENTER";
+//    private static final String LOG_TAG = "MAIN_PRESENTER";
 
 //    private PresenterView presenterView;
 //    private IRatingLogic ratingLogic;

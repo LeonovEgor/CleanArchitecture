@@ -1,4 +1,4 @@
-package ru.leonov.cleanarch.model.data;
+package ru.leonov.cleanarch.model.data.photo;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -6,15 +6,17 @@ import java.util.List;
 import java.util.Objects;
 
 import retrofit2.Response;
-import ru.leonov.cleanarch.model.data.Model.ApiGetPhotos;
-import ru.leonov.cleanarch.model.data.Model.ApiPhoto;
+import ru.leonov.cleanarch.model.data.model.photos.ApiGetPhotos;
+import ru.leonov.cleanarch.model.data.model.photos.ApiPhoto;
 import ru.leonov.cleanarch.model.entities.PhotoContainer;
 import ru.leonov.cleanarch.model.network.LoadPhotoHelper;
 import ru.leonov.cleanarch.model.network.RequestHelper;
 import ru.leonov.cleanarch.model.repository.IPhotoRepository;
 
 public class PhotoRepository implements IPhotoRepository {
-    private static final String PHOTO_SIZE = "b";
+    private static final String PHOTO_SIZE = "z";
+    private static final String BIG_PHOTO_SIZE = "b";
+
     private final PhotosMapper mapper;
 
     public PhotoRepository() {
@@ -51,18 +53,18 @@ public class PhotoRepository implements IPhotoRepository {
             }
 
             return list;
-
         }
 
         private PhotoContainer map(ApiPhoto apiPhoto) {
             return new PhotoContainer(
                     apiPhoto.getOwner(),
                     apiPhoto.getTitle(),
-                    compileUrl(apiPhoto));
+                    compileUrl(apiPhoto, PHOTO_SIZE),
+                    compileUrl(apiPhoto, BIG_PHOTO_SIZE));
         }
 
-        private String compileUrl(ApiPhoto apiPhoto) {
-            return LoadPhotoHelper.getPhotoPath(apiPhoto.getFarm(), apiPhoto.getServer(), apiPhoto.getId(), apiPhoto.getSecret(), PHOTO_SIZE);
+        private String compileUrl(ApiPhoto apiPhoto, String photoSize) {
+            return LoadPhotoHelper.getPhotoPath(apiPhoto.getFarm(), apiPhoto.getServer(), apiPhoto.getId(), apiPhoto.getSecret(), photoSize);
         }
     }
 }

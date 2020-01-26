@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
-        <!-- здесь описывается переменная, ссылается на нашу ViewModel -->
         <variable
             name="viewModel"
-            type="ru.leonov.cleanarch.view.ui.PhotoListViewModel" />
+            type="ru.leonov.cleanarch.view.ui.photoList.PhotoListViewModel" />
         <import type="android.view.View"/>
         <import type="android.text.TextUtils"/>
     </data>
@@ -55,6 +54,7 @@
                 android:id="@+id/tiSearch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:windowSoftInputMode="stateHidden"
                 android:text="@{viewModel.searchString}" />
 
         </com.google.android.material.textfield.TextInputLayout>

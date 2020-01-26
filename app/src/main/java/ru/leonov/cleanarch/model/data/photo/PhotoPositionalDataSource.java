@@ -1,4 +1,4 @@
-package ru.leonov.cleanarch.model.data;
+package ru.leonov.cleanarch.model.data.photo;
 
 import android.util.Log;
 

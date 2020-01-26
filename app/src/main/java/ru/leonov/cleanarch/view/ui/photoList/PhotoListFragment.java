@@ -1,4 +1,4 @@
-package ru.leonov.cleanarch.view.ui.PhotoList;
+package ru.leonov.cleanarch.view.ui.photoList;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -26,40 +28,29 @@ import ru.leonov.cleanarch.model.entities.PhotoContainer;
 import ru.leonov.cleanarch.model.utils.executor.MainThreadExecutor;
 import ru.leonov.cleanarch.model.utils.logger.ILogger;
 import ru.leonov.cleanarch.model.utils.logger.MyLogger;
-import ru.leonov.cleanarch.view.ui.PhotoListViewModel;
+import ru.leonov.cleanarch.model.utils.ui.UiHelper;
 
 public class PhotoListFragment extends Fragment {
-    private final int COLUMN_NUMBERS = 2;
+    private final float IMAGE_SIZE = 110.0f + 16.0f;
 
     private PhotoListViewModel viewModel;
-    private ILogger logger;
 
-    private RecyclerView recyclerView;
-    private MaterialButton btnSearch;
     private TextInputEditText etSearch;
+    private RecyclerView recyclerView;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         viewModel = ViewModelProviders
                 .of(this, new PhotoViewModelFactory())
                 .get(PhotoListViewModel.class);
 
-        initLogger();
         FragmentPhotoListBinding binding = binding(inflater, container);
         initView(binding.getRoot());
         PhotoAdapter adapter = initPagingRecycler();
         runPagedListThreadExecutor(adapter);
         setupSearchButtonClick();
-
-
-//        view.findViewById(R.id.bottom).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                presenter.onBottomButtonClick();
-//            }
-//        });
 
         return binding.getRoot();
     }
@@ -74,18 +65,12 @@ public class PhotoListFragment extends Fragment {
         return binding;
     }
 
-    private void initLogger() {
-        logger = new MyLogger();
-    }
-
     private void initView(View view) {
 
         recyclerView = view.findViewById(R.id.rv_photos);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), COLUMN_NUMBERS));
 
         etSearch = view.findViewById(R.id.tiSearch);
-        btnSearch = view.findViewById(R.id.btn_search);
-
+        MaterialButton btnSearch = view.findViewById(R.id.btn_search);
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 viewModel.setSearchString(Objects.requireNonNull(etSearch.getText()).toString());
@@ -94,8 +79,11 @@ public class PhotoListFragment extends Fragment {
     }
 
     private PhotoAdapter initPagingRecycler() {
-        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), COLUMN_NUMBERS);
-        PhotoAdapter adapter = new PhotoAdapter(getContext(), viewModel);
+
+        int columnsCount = UiHelper.calcColumnsCount(Objects.requireNonNull(getContext()),
+                IMAGE_SIZE);
+        GridLayoutManager layoutManager = new GridLayoutManager(getContext(),  columnsCount);
+        PhotoAdapter adapter = new PhotoAdapter(viewModel);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
         return adapter;
@@ -104,6 +92,7 @@ public class PhotoListFragment extends Fragment {
     private void runPagedListThreadExecutor(final PhotoAdapter adapter) {
         final Executor fetchExecutor = Executors.newSingleThreadExecutor();
         final PagedList.Builder<Integer, PhotoContainer> pagedListBuilder = createPagedList(fetchExecutor);
+        viewModel.setResult(getString(R.string.loading));
 
         fetchExecutor.execute(new Runnable() {
             @Override
@@ -150,6 +139,4 @@ public class PhotoListFragment extends Fragment {
         adapter.notifyDataSetChanged();
         runPagedListThreadExecutor(adapter);
     }
-
-
 }

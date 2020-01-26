@@ -17,12 +17,11 @@
     </style>
 
     <style name="Text" parent="Margin">
-        <item name="android:textSize">10sp</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
     <style name="MatButton" parent="Theme.MaterialComponents">
         <item name="colorPrimary">@color/colorAccent</item>
     </style>
-
 
 </resources>

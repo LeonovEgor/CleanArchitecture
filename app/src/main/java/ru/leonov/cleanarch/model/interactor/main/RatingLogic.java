@@ -6,7 +6,7 @@ public class RatingLogic implements IRatingLogic{
     private static final int FIRST_SHOW = 2;
     private static final int NEXT_SHOW = 4;
 
-    private IRunCounter counter;
+    private final IRunCounter counter;
 
     public RatingLogic(IRunCounter counter) {
         this.counter = counter;

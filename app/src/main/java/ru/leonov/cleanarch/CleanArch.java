@@ -2,15 +2,15 @@ package ru.leonov.cleanarch;
 
 import android.app.Application;
 
-import ru.leonov.cleanarch.model.data.Storage;
-import ru.leonov.cleanarch.model.data.StorageRepository;
+import ru.leonov.cleanarch.model.data.storage.Storage;
+import ru.leonov.cleanarch.model.data.storage.StorageRepository;
 
 import ru.leonov.cleanarch.model.interactor.counter.IRunCounter;
 import ru.leonov.cleanarch.model.interactor.counter.RunCounter;
 import ru.leonov.cleanarch.model.interactor.main.IRatingLogic;
 import ru.leonov.cleanarch.model.interactor.main.RatingLogic;
-import ru.leonov.cleanarch.view.Navigator.INavigator;
-import ru.leonov.cleanarch.view.Navigator.MainNavigator;
+import ru.leonov.cleanarch.view.navigator.INavigator;
+import ru.leonov.cleanarch.view.navigator.MainNavigator;
 
 public class CleanArch extends Application  {
 

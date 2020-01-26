@@ -8,12 +8,10 @@ import org.jetbrains.annotations.NotNull;
 
 import ru.leonov.cleanarch.CleanArch;
 import ru.leonov.cleanarch.R;
-import ru.leonov.cleanarch.view.Navigator.MainNavigator;
+import ru.leonov.cleanarch.view.navigator.MainNavigator;
 
 
 public class MainActivity extends AppCompatActivity  {
-
-    private MainNavigator navigator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

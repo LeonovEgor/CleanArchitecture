@@ -1,4 +1,4 @@
-package ru.leonov.cleanarch.view.Navigator;
+package ru.leonov.cleanarch.view.navigator;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -7,8 +7,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import ru.leonov.cleanarch.R;
 import ru.leonov.cleanarch.model.entities.PhotoContainer;
-import ru.leonov.cleanarch.view.ui.PhotoDetails.DetailFragment;
-import ru.leonov.cleanarch.view.ui.PhotoList.PhotoListFragment;
+import ru.leonov.cleanarch.view.ui.details.DetailFragment;
+import ru.leonov.cleanarch.view.ui.photoList.PhotoListFragment;
 
 public class MainNavigator implements INavigator {
 

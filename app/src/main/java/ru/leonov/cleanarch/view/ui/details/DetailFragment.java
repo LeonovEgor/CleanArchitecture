@@ -1,4 +1,4 @@
-package ru.leonov.cleanarch.view.ui.PhotoDetails;
+package ru.leonov.cleanarch.view.ui.details;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,7 +17,6 @@ import java.util.Objects;
 import ru.leonov.cleanarch.R;
 import ru.leonov.cleanarch.databinding.FragmentDetailsBinding;
 import ru.leonov.cleanarch.model.entities.PhotoContainer;
-import ru.leonov.cleanarch.view.ui.DetailViewModel;
 
 public class DetailFragment extends Fragment {
     private static final String PHOTO_CONTAINER = "PHOTO_CONTAINER";
@@ -39,7 +38,7 @@ public class DetailFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         viewModel = ViewModelProviders
-                .of(this)
+                .of(this, new DetailViewModelFactory())
                 .get(DetailViewModel.class);
 
         viewModel.setResult(getBundleData());

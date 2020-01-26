@@ -1,4 +1,4 @@
-package ru.leonov.cleanarch.view.ui.PhotoList;
+package ru.leonov.cleanarch.view.ui.photoList;
 
 import androidx.recyclerview.widget.DiffUtil;
 

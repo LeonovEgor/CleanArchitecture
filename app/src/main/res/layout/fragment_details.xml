@@ -33,11 +33,15 @@
             android:id="@+id/iv_photo"
             style="@style/Margin"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:cropToPadding="true"
+            android:foregroundGravity="center"
+            android:scaleType="center"
+            app:imageUrl="@{photoContainer.bigPhotoUrl}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_name"
-            app:imageUrl="@{photoContainer.photoUrl}"/>
+            app:srcCompat="@drawable/image" />
 
         <TextView
             android:id="@+id/tv_description"
@@ -49,10 +53,10 @@
             android:maxLines="3"
             android:singleLine="true"
             android:text="@{photoContainer.description}"
+            android:gravity="bottom"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv_photo" />
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
