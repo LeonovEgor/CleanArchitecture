@@ -26,8 +26,6 @@ import ru.leonov.cleanarch.R;
 import ru.leonov.cleanarch.databinding.FragmentPhotoListBinding;
 import ru.leonov.cleanarch.model.entities.PhotoContainer;
 import ru.leonov.cleanarch.model.utils.executor.MainThreadExecutor;
-import ru.leonov.cleanarch.model.utils.logger.ILogger;
-import ru.leonov.cleanarch.model.utils.logger.MyLogger;
 import ru.leonov.cleanarch.model.utils.ui.UiHelper;
 
 public class PhotoListFragment extends Fragment {
